@@ -1,0 +1,27 @@
+[user]
+	# details are in a ~/.gitconfig_private
+[core]
+	autocrlf = input
+	excludesfile = ~/.gitignore_global
+[rerere]
+	enabled = true
+[color]
+	ui = 1
+[rebase]
+	autosquash = true
+[push]
+	default = matching
+[commit]
+	gpgsign = true
+[init]
+	defaultBranch = main
+[sequence]
+	editor = interactive-rebase-tool
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[include]
+	path = ~/.gitconfig_private
