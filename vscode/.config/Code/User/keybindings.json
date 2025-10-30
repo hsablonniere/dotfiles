@@ -1,0 +1,204 @@
+// Place your key bindings in this file to override the defaults
+[
+    {
+        "key": "alt+enter",
+        "command": "-workbench.action.terminal.chat.insertCommand",
+        "when": "chatIsEnabled && terminalChatResponseContainsCodeBlock && terminalHasBeenCreated && !terminalChatActiveRequest && !terminalChatResponseContainsMultipleCodeBlocks || chatIsEnabled && terminalChatResponseContainsCodeBlock && terminalProcessSupported && !terminalChatActiveRequest && !terminalChatResponseContainsMultipleCodeBlocks"
+    },
+    {
+        "key": "alt+enter",
+        "command": "-workbench.action.terminal.chat.insertFirstCommand",
+        "when": "chatIsEnabled && terminalChatResponseContainsMultipleCodeBlocks && terminalHasBeenCreated && !terminalChatActiveRequest || chatIsEnabled && terminalChatResponseContainsMultipleCodeBlocks && terminalProcessSupported && !terminalChatActiveRequest"
+    },
+    {
+        "key": "alt+enter",
+        "command": "-notebook.cell.executeAndInsertBelow",
+        "when": "notebookCellListFocused && notebookCellType == 'markup' || notebookCellListFocused && notebookMissingKernelExtension && !notebookCellExecuting && notebookCellType == 'code' || notebookCellListFocused && !notebookCellExecuting && notebookCellType == 'code' && notebookKernelCount > 0 || notebookCellListFocused && !notebookCellExecuting && notebookCellType == 'code' && notebookKernelSourceCount > 0"
+    },
+    {
+        "key": "alt+enter",
+        "command": "-editor.action.selectAllMatches",
+        "when": "editorFocus && findWidgetVisible"
+    },
+    {
+        "key": "alt+enter",
+        "command": "editor.action.quickFix",
+        "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+shift+[Comma]",
+        "command": "-editor.action.quickFix",
+        "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+shift+c",
+        "command": "editor.action.commentLine",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "alt+shift+up",
+        "command": "editor.action.moveLinesUpAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "alt+shift+down",
+        "command": "editor.action.moveLinesDownAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "alt+r",
+        "command": "editor.action.addSelectionToNextFindMatch",
+        "when": "editorFocus"
+    },
+    {
+        "key": "alt+shift+r",
+        "command": "editor.action.removeSelectionFromPreviousFindMatch",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+e",
+        "command": "editor.action.deleteLines",
+        "when": "textInputFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+d",
+        "command": "editor.action.copyLinesDownAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "alt+e",
+        "command": "editor.action.smartSelect.expand",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "alt+shift+e",
+        "command": "editor.action.smartSelect.shrink",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "alt+q",
+        "command": "workbench.action.splitEditorRight",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "alt+shift+q",
+        "command": "workbench.action.splitEditorDown",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "alt+a",
+        "command": "workbench.action.toggleSidebarVisibility"
+    },
+    {
+        "key": "alt+shift+f",
+        "command": "editor.action.formatDocument",
+        "when": "editorHasDocumentFormattingProvider && editorTextFocus && !editorReadonly && !inCompositeEditor"
+    },
+    {
+        "key": "alt+d",
+        "command": "markdown.showPreviewToSide",
+        "when": "!notebookEditorFocused && editorLangId == 'markdown'"
+    },
+    {
+        "key": "ctrl+shift+s",
+        "command": "workbench.action.openSettings"
+    },
+    {
+        "key": "alt+d",
+        "command": "markdown.extension.closePreview",
+        "when": "activeWebviewPanelId == 'markdown.preview'"
+    },
+    {
+        "key": "alt+down",
+        "command": "-editor.action.moveLinesDownAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "alt+up",
+        "command": "-editor.action.moveLinesUpAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "alt+down",
+        "command": "-markdown.extension.onMoveLineDown",
+        "when": "editorTextFocus && !editorReadonly && !suggestWidgetVisible && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
+    },
+    {
+        "key": "alt+up",
+        "command": "-markdown.extension.onMoveLineUp",
+        "when": "editorTextFocus && !editorReadonly && !suggestWidgetVisible && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
+    },
+    {
+        "key": "alt+down",
+        "command": "incrementor.decrementByTenth"
+    },
+    {
+        "key": "ctrl+shift+alt+down",
+        "command": "-incrementor.decrementByTenth"
+    },
+    {
+        "key": "alt+up",
+        "command": "incrementor.incrementByTenth"
+    },
+    {
+        "key": "ctrl+shift+alt+up",
+        "command": "-incrementor.incrementByTenth"
+    },
+    {
+        "key": "shift+alt+l",
+        "command": "sortLines.sortLines",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "shift+alt+k",
+        "command": "editor.action.removeDuplicateLines"
+    },
+    {
+        "key": "alt+t",
+        "command": "extension.changeCase.commands"
+    },
+    {
+        "key": "ctrl+shift+w",
+        "command": "-workbench.action.closeWindow"
+    },
+    {
+        "key": "ctrl+shift+w",
+        "command": "-workbench.action.closeAllEditors"
+    },
+    {
+        "key": "ctrl+shift+w",
+        "command": "editor.action.toggleWordWrap"
+    },
+    {
+        "key": "alt+c",
+        "command": "editor.action.toggleColumnSelection"
+    },
+    {
+        "key": "alt+g",
+        "command": "markdown.extension.checkTaskList",
+        "when": "editorTextFocus && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
+    },
+    {
+        "key": "alt+c",
+        "command": "-markdown.extension.checkTaskList",
+        "when": "editorTextFocus && editorLangId =~ /^markdown$|^rmd$|^quarto$/"
+    },
+    {
+        "key": "shift+alt+d",
+        "command": "markmap-vscode.open"
+    },
+    {
+        "key": "ctrl+k z",
+        "command": "-workbench.action.toggleZenMode",
+        "when": "!isAuxiliaryWindowFocusedContext"
+    },
+    {
+        "key": "escape escape",
+        "command": "-workbench.action.exitZenMode",
+        "when": "inZenMode"
+    },
+    {
+        "key": "shift+f11",
+        "command": "workbench.action.toggleZenMode"
+    }
+]

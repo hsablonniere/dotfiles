@@ -1,0 +1,78 @@
+{
+  "// General": "",
+  "editor.overviewRulerBorder": false,
+  "editor.renderLineHighlight": "none",
+  "explorer.sortOrder": "modified",
+  "extensions.ignoreRecommendations": true,
+  "files.insertFinalNewline": true,
+  "security.workspace.trust.untrustedFiles": "open",
+  "telemetry.feedback.enabled": false,
+  "telemetry.telemetryLevel": "off",
+  "update.mode": "none",
+  "window.commandCenter": false,
+  "workbench.activityBar.location": "hidden",
+  "workbench.colorTheme": "GitHub Dark Dimmed",
+  "workbench.editor.showTabs": "multiple",
+  "workbench.layoutControl.enabled": false,
+  "workbench.sideBar.location": "right",
+  
+  "// UI": "",
+  "editor.fontFamily": "'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace",
+  "editor.fontSize": 20,
+  "editor.lineHeight": 1.6,
+  "editor.lineNumbers": "on",
+  
+  "// Quick auto save": "",
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 250,
+  
+  "// Please not chat!": "",
+  "chat.agent.enabled": false,
+  "chat.commandCenter.enabled": false,
+  
+  "// Markdown settings": "",
+  "files.defaultLanguage": "markdown",
+  "[markdown]": {
+    "editor.wordWrap": "bounded",
+    "editor.wordWrapColumn": 80,
+    "editor.quickSuggestions": {
+      "other": false,
+      "comments": false,
+      "strings": false
+    },
+    "editor.rulers": [],
+    "editor.acceptSuggestionOnEnter": "on",
+    "editor.wordBasedSuggestions": "matchingDocuments",
+    "editor.snippetSuggestions": "none",
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+  },
+  "markdown-preview-enhanced.breakOnSingleNewLine": false,
+  "markdown-preview-enhanced.HTML5EmbedUseLinkSyntax": true,
+  "cSpell.enabled": true,
+  "cSpell.language": "en,fr",
+  "cSpell.minRandomLength": 20,
+  "cSpell.customDictionaries": {
+    "custom-dictionary": {
+      "name": "custom-dictionary",
+      "path": "~/.dictionary.txt",
+      "addWords": true
+    }
+  },
+  "markdownlint.run": "onSave",
+  "markdownlint.config": {
+    "extends": "~/.markdownlintrc.json"
+  },
+  "markmap.defaultOptions": "{\"duration\":150,\"initialExpandLevel\":1}",
+  "editor.minimap.enabled": false,
+
+  "// Zen mode settings": "",
+  "zenMode.showTabs": "none",
+  "zenMode.hideLineNumbers": true,
+
+  "// workbench.colorCustomizations": {
+    "editorGroup.border": "#0000",
+    "sash.hoverBorder": "#ff0000"
+  },
+  "zenMode.centerLayout": false
+
+}
