@@ -1,0 +1,45 @@
+# Font Configuration
+font-family = JetBrainsMono Nerd Font
+font-size = 14
+font-feature = -calt
+
+# Theme
+theme = hsablonniere-dark
+
+# Window Configuration
+window-inherit-working-directory = true
+window-theme = system
+window-padding-x = 10
+window-padding-y = 10
+gtk-tabs-location = top
+gtk-titlebar-style = tabs
+resize-overlay = never
+
+# Terminal Behavior
+copy-on-select = false
+mouse-hide-while-typing = true
+cursor-click-to-move = true
+
+# Shell Integration
+shell-integration = fish
+shell-integration-features = no-cursor,title
+
+# Scrolling & Links
+scrollback-limit = 10000000
+link-url = true
+
+# Custom Keybindings
+keybind = alt+q=new_split:right
+keybind = alt+shift+q=new_split:down
+keybind = ctrl+w=close_surface
+
+# Split pane navigation with Alt + arrow keys
+keybind = alt+left=goto_split:left
+keybind = alt+right=goto_split:right
+keybind = alt+up=goto_split:up
+keybind = alt+down=goto_split:down
+
+# Cells and blocks
+adjust-box-thickness = 100%
+
+keybind = shift+enter=text:\n
