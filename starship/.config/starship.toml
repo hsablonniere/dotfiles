@@ -1,0 +1,114 @@
+# Starship config
+
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# https://www.nerdfonts.com/cheat-sheet
+# \ue0b0 nf-pl-left_hard_divider
+# \ue0b2 nf-pl-right_hard_divider
+# \ue0b6 nf-ple-left_half_circle_thick
+# \ue0b4 nf-ple-right_half_circle_thick
+
+add_newline = false
+command_timeout = 1_000
+palette = 'custom'
+
+format = """
+[\ue0b6](dir)\
+[ $directory ](bg:dir)\
+[\ue0b0](bg:git dir)\
+[ ($git_branch $git_commit( $git_status) )](bg:git)\
+[\ue0b0](bg:node git)\
+[ (${custom.nodejs} )](bg:node)\
+[\ue0b0](node)\
+[ $fill ]()\
+[\ue0b2](status)\
+[ ($status )](bg:status)\
+[\ue0b2](bg:status duration)\
+[ ($cmd_duration )](bg:duration)\
+[\ue0b2](bg:duration sudo)\
+[ $sudo](bg:sudo #000000)\
+[\ue0b4](sudo)\
+$line_break\
+$character\
+"""
+
+#[\ue0b0](bg:clevercloud node)\
+#[ (${custom.clevercloud} )](bg:clevercloud)\
+#[\ue0b0](clevercloud)\
+
+[palettes.custom]
+dir = '#3456a4'
+git = '#466b3e'
+node = '#339933'
+sudo = '#e2e200'
+status = '#e20000'
+duration = '#ad3c9e'
+clevercloud = '#444444'
+
+[directory]
+format = "($read_only )$path"
+read_only = "\uf456"
+
+[git_branch]
+format = "$branch"
+
+[git_commit]
+format = "$hash"
+commit_hash_length = 8
+only_detached = false
+
+[git_status]
+format = '$all_status$ahead_behind'
+conflicted = "\uf071${count}"
+ahead = "\ueb70${count}"
+behind = "${count}\ueb6f"
+diverged = "${behind_count}\ueb6f\ueb70${ahead_count}"
+up_to_date = ""
+untracked = "?${count}"
+stashed = ""
+modified = "M${count}"
+staged = "S${count}"
+renamed = "R${count}"
+deleted = "D${count}"
+
+[git_state]
+disabled = false
+format = "$state(:$progress_current/$progress_total)"
+rebase= "rebase"
+merge= "merge"
+revert= "revert"
+cherry_pick= "cherry-pick"
+bisect= "bisect"
+
+[custom.nodejs]
+format = "$output"
+command = "cat package.json | jq '.volta.node' -r"
+detect_files = ['package.json']
+
+#[custom.clevercloud]
+#format = "$output"
+#command = "clever status -a prod -F json | jq '.commit[0:8]' -r"
+#detect_files = ['.clever.json']
+
+[fill]
+symbol = '·'
+style = '#333333'
+
+[sudo]
+disabled = false
+format = "$symbol"
+# extra space for the key char to be big
+symbol = "\uf084 "
+
+[cmd_duration]
+format = "$duration"
+
+[status]
+disabled = false
+format = "$symbol $signal_name"
+symbol = "\uf467"
+
+[character]
+format = '➜ '
+
