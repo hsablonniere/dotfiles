@@ -1,0 +1,42 @@
+{
+  "slots": {
+    "1": {
+      "name": "Ghostty",
+      "wmClass": "com.mitchellh.ghostty",
+      "launcher": "com.mitchellh.ghostty.desktop"
+    },
+    "2": {
+      "name": "Visual Studio Code",
+      "wmClass": "Code",
+      "launcher": "code.desktop"
+    },
+    "3": {
+      "name": "Zen Browser",
+      "wmClass": "zen",
+      "launcher": "zen.desktop"
+    },
+    "4": {
+      "name": "WebStorm",
+      "wmClass": "jetbrains-webstorm",
+      "launcher": "jetbrains-webstorm.desktop"
+    },
+    "5": {
+      "name": "Nautilus",
+      "wmClass": "Nautilus",
+      "launcher": "nautilus.desktop"
+    },
+    "6": {
+      "name": "Chromium",
+      "wmClass": "Chromium",
+      "launcher": "chromium.desktop"
+    }
+  },
+  "settings": {
+    "visualIndicator": {
+      "duration": 150,
+      "opacity": 0.15,
+      "color": "30, 64, 175"
+    },
+    "quickSwitchTimeout": 2000
+  }
+}
