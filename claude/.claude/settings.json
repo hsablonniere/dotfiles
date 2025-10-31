@@ -11,6 +11,7 @@
       "mcp__context7__resolve-library-id",
       "mcp__context7__get-library-docs",
       "Bash(npm run build:*)",
+      "Bash(npm search:*)",
       "Bash(git log:*)",
       "Bash(git branch:*)",
       "Bash(git fetch:*)",
@@ -34,12 +35,12 @@
       "Read(.env*)"
     ]
   },
+  "model": "haiku",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.js",
     "padding": 0
   },
   "spinnerTipsEnabled": false,
-  "alwaysThinkingEnabled": false,
-  "model": "haiku"
+  "alwaysThinkingEnabled": true
 }
