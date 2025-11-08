@@ -35,12 +35,11 @@
       "Read(.env*)"
     ]
   },
-  "model": "haiku",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.js",
     "padding": 0
   },
   "spinnerTipsEnabled": false,
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": false
 }
