@@ -12,6 +12,7 @@
       "Bash(curl:*)",
       "Bash(find:*)",
       "Bash(jq:*)",
+      "Bash(ls:*)",
       "Bash(mkdir:*)",
       "Bash(node:*)",
       "Bash(sed:*)",
