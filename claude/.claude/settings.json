@@ -22,6 +22,7 @@
       "Bash(git fetch:*)",
       "Bash(git filter-branch:*)",
       "Bash(git log:*)",
+      "Bash(git show:*)",
       "Bash(gh issue list:*)",
       "Bash(gh issue status:*)",
       "Bash(gh issue view:*)",
