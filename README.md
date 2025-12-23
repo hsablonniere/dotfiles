@@ -68,6 +68,14 @@ A simple Git terminal UI for lazy developers.
 
 **Config location:** `.config/lazygit/config.yml`
 
+### [npm](https://www.npmjs.com/)
+
+npm is the package manager for JavaScript.
+
+**Config location:** `.npmrc`
+
+- `ignore-scripts=true` - Disables automatic script execution for security
+
 ### [Starship](https://starship.rs/)
 
 A cross-platform prompt that's fast, customizable, and showing the information you need.
