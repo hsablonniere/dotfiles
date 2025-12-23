@@ -1,4 +1,4 @@
-function cert
+function cert --description "Show SSL certificate info for a domain"
     if test (count $argv) -eq 0
         echo "Usage: cert <domain>"
         return 1
