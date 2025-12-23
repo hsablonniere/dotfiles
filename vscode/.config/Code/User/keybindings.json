@@ -200,5 +200,14 @@
     {
         "key": "shift+f11",
         "command": "workbench.action.toggleZenMode"
+    },
+    {
+        "key": "ctrl+shift+v",
+        "command": "-markdown.showPreview",
+        "when": "editorLangId == 'markdown'"
+    },
+    {
+        "key": "ctrl+shift+v",
+        "command": "editor.action.clipboardPasteAction"
     }
 ]
