@@ -98,8 +98,7 @@ style = '#333333'
 [sudo]
 disabled = false
 format = "$symbol"
-# extra space for the key char to be big
-symbol = "\uf084 "
+symbol = "sudo "
 
 [cmd_duration]
 format = "$duration"
