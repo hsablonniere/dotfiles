@@ -27,8 +27,8 @@ function formatSections(sections) {
   const RIGHT_ROUND = '\ue0b4';
 
   const coloredSections = sections.map((section, index) => {
-    const { text, bgColor } = section;
-    const coloredSection = ansi(` ${text} `, bgColor);
+    const { text, bgColor, color } = section;
+    const coloredSection = ansi(` ${text} `, bgColor, color);
 
     // First section does not need a leading right arrow
     if (index === 0) {
@@ -64,6 +64,20 @@ try {
   
   const model = input.model.display_name;
   sections.push({ text: model, bgColor: "rgb(68, 68, 68)" });
+
+  // Context window usage
+  const contextWindow = input.context_window;
+
+  if (contextWindow?.current_usage && contextWindow?.context_window_size) {
+    const usage = contextWindow.current_usage;
+    const currentTokens = (usage.input_tokens || 0) +
+                          (usage.output_tokens || 0) +
+                          (usage.cache_creation_input_tokens || 0) +
+                          (usage.cache_read_input_tokens || 0);
+    const contextSize = contextWindow.context_window_size;
+    const percent = Math.round((currentTokens / contextSize) * 100);
+    sections.push({ text: `${percent}%`, bgColor: "rgb(217, 119, 87)", color: "rgb(0, 0, 0)" });
+  }
 
   console.log(formatSections(sections));
 } catch (error) {
