@@ -10,7 +10,7 @@
 # \ue0b4 nf-ple-right_half_circle_thick
 
 add_newline = false
-command_timeout = 1_000
+command_timeout = 2_000
 palette = 'custom'
 
 format = """
