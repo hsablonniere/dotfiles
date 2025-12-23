@@ -27,8 +27,10 @@ format = """
 [\ue0b2](bg:status duration)\
 [ ($cmd_duration )](bg:duration)\
 [\ue0b2](bg:duration sudo)\
-[ $sudo](bg:sudo #000000)\
-[\ue0b4](sudo)\
+[ $sudo](bg:sudo bold #000000)\
+[\ue0b2](bg:sudo op)\
+[ ${custom.onepassword}](bg:op #ffffff)\
+[\ue0b4](op)\
 $line_break\
 $character\
 """
@@ -42,6 +44,7 @@ dir = '#3456a4'
 git = '#466b3e'
 node = '#339933'
 sudo = '#e2e200'
+op = '#293f71'
 status = '#e20000'
 duration = '#ad3c9e'
 clevercloud = '#444444'
@@ -90,6 +93,12 @@ detect_files = ['package.json']
 #format = "$output"
 #command = "clever status -a prod -F json | jq '.commit[0:8]' -r"
 #detect_files = ['.clever.json']
+
+[custom.onepassword]
+format = "$symbol"
+command = "echo ''"
+when = "op whoami 2>/dev/null"
+symbol = "\uf4fc "
 
 [fill]
 symbol = '·'
