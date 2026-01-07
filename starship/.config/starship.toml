@@ -86,8 +86,8 @@ bisect= "bisect"
 
 [custom.nodejs]
 format = "$output"
-command = "cat package.json | jq '.volta.node' -r"
-detect_files = ['package.json']
+command = "mise current node 2>/dev/null"
+detect_files = ['package.json', '.mise.toml', '.tool-versions']
 
 #[custom.clevercloud]
 #format = "$output"
