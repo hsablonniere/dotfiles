@@ -67,7 +67,9 @@
       "Bash(npm info:*)",
       "Bash(npm install:*)",
       "Bash(npm run build:*)",
-      "Bash(npm search:*)"
+      "Bash(npm run lint:*)",
+      "Bash(npm search:*)",
+      "Bash(node --check:*)"
     ],
     "deny": [
       "Read(.env*)"
