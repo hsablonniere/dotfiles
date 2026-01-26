@@ -83,6 +83,5 @@
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true
   },
-  "spinnerTipsEnabled": false,
-  "alwaysThinkingEnabled": false
+  "spinnerTipsEnabled": false
 }
