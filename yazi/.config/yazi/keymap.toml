@@ -1,0 +1,6 @@
+# keymap.toml
+
+[[mgr.prepend_keymap]]
+on = "T"
+run = ["tab_create --current", "cd --interactive"]
+desc = "New tab with URL input"
