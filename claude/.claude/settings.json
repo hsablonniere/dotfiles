@@ -59,6 +59,9 @@
       "Bash(npm search:*)",
       "Bash(node --check:*)"
     ],
+    "ask": [
+      "Read(~/.config/*)"
+    ],
     "deny": [
       "Read(.env*)"
     ]
