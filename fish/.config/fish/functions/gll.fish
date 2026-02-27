@@ -8,13 +8,15 @@ function gll --description "Git log CSV from branch to root commit"
   end
 
   begin
-    echo "Commit"(printf '\x1e')"Type"(printf '\x1e')"Scope"(printf '\x1e')"Message"(printf '\x1e')"Date"(printf '\x1e')"Author"(printf '\x1e')"Decorations"
-    PAGER=cat git log --pretty=format:'%h%x1e%s%x1e%cs%x1e%an%x1e%d' --abbrev-commit "$target_branch" | awk -v sep=(printf '\x1e') -F (printf '\x1e') '{
+    echo "Commit"(printf '\x1e')"Type"(printf '\x1e')"Scope"(printf '\x1e')"Message"(printf '\x1e')"Date"(printf '\x1e')"Time"(printf '\x1e')"Author"(printf '\x1e')"Decorations"
+    PAGER=cat git log --pretty=format:'%h%x1e%s%x1e%ci%x1e%an%x1e%d' --abbrev-commit "$target_branch" | awk -v sep=(printf '\x1e') -F (printf '\x1e') '{
       msg=$2; type=""; scope=""; rest=msg
       if (match(msg, /^([a-z]+)(\(([^)]*)\))?:/, arr)) {
         type=arr[1]; scope=arr[3]; rest=substr(msg, RLENGTH+2)
       }
-      print $1 sep type sep scope sep rest sep $3 sep $4 sep $5
+      split($3, dt, " ")
+      date=dt[1]; time=dt[2]
+      print $1 sep type sep scope sep rest sep date sep time sep $4 sep $5
     }'
   end | tw --separator (printf '\x1e') --quote-char (printf '\x1f')
 end
