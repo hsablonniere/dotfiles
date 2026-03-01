@@ -2,6 +2,10 @@
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
+      "Skill(commit)",
+      "Skill(pr)",
+      "Skill(rebase)",
+      "Skill(interview)",
       "Fetch",
       "WebFetch",
       "WebSearch",
