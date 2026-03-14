@@ -38,7 +38,6 @@
       "Bash(git diff:*)",
       "Bash(git fetch:*)",
       "Bash(git for-each-ref:*)",
-      "Bash(git filter-branch:*)",
       "Bash(git log:*)",
       "Bash(git ls-tree:*)",
       "Bash(git rev-parse:*)",
@@ -101,6 +100,6 @@
     "typescript-lsp@claude-plugins-official": true
   },
   "spinnerTipsEnabled": false,
-  "promptSuggestionEnabled": false,
-  "effortLevel": "medium"
+  "effortLevel": "medium",
+  "promptSuggestionEnabled": false
 }
