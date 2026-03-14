@@ -92,5 +92,6 @@
     "frontend-design@claude-plugins-official": true
   },
   "spinnerTipsEnabled": false,
-  "promptSuggestionEnabled": false
+  "promptSuggestionEnabled": false,
+  "effortLevel": "medium"
 }
