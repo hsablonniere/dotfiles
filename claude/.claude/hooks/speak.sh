@@ -14,8 +14,22 @@ input=$(cat)
 # Extract transcript path
 transcript_path=$(echo "$input" | jq -r '.transcript_path')
 
-# Get the last assistant text response (full text, not just first line)
-last_response=$(tac "$transcript_path" | jq -rs '[.[] | select(.type=="assistant")] | .[0].message.content[]? | select(.type=="text") | .text' 2>/dev/null)
+# Stop hook can fire before the final assistant text is flushed to the
+# transcript. Wait until the file has been idle for ~400ms (max ~3s).
+prev_mtime=0
+for _ in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do
+  mtime=$(stat -c %Y "$transcript_path" 2>/dev/null || echo 0)
+  now=$(date +%s)
+  if [ "$mtime" = "$prev_mtime" ] && [ $((now - mtime)) -ge 1 ]; then
+    break
+  fi
+  prev_mtime=$mtime
+  sleep 0.2
+done
+
+# Get the last assistant text block (each block is its own JSONL entry,
+# and the final entry is often a tool_use, so we pick the last text anywhere)
+last_response=$(jq -rs '[.[] | select(.type=="assistant") | .message.content[]? | select(.type=="text") | .text] | last' "$transcript_path" 2>/dev/null)
 
 # Clean markdown and speak in background
 if [ -n "$last_response" ]; then
