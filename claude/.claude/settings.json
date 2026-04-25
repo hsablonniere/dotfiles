@@ -100,7 +100,9 @@
     "frontend-design@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true
   },
+  "language": "French",
   "spinnerTipsEnabled": false,
   "effortLevel": "xhigh",
-  "promptSuggestionEnabled": false
+  "promptSuggestionEnabled": false,
+  "awaySummaryEnabled": false
 }
