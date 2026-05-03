@@ -108,5 +108,6 @@
   "awaySummaryEnabled": false,
   "skipDangerousModePermissionPrompt": true,
   "preferredNotifChannel": "ghostty",
-  "autoCompactEnabled": false
+  "autoCompactEnabled": false,
+  "skipAutoPermissionPrompt": true
 }
