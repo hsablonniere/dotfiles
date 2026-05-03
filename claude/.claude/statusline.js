@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
 const fs = require('node:fs');
-const { execSync } = require('node:child_process');
+const path = require('node:path');
+const { execSync, spawn } = require('node:child_process');
 
 const CLAUDE_DUMB_ZONE = 59;
+const QUOTA_CACHE_FILE = '/tmp/claude-quota-cache.json';
+const QUOTA_CACHE_TTL = 5 * 60 * 1000;
 
 function getGitBranch() {
   try {
@@ -20,6 +23,39 @@ function ansi(text, bgColor, color = 'rgb(255, 255, 255)') {
   const colorValues = color.match(/\d+/g);
   const colorAnsi = `\x1b[38;2;${colorValues.join(';')}m`;
   return `${RESET}${bgColorAnsi}${colorAnsi}${text}${RESET}`;
+}
+
+function formatQuotaRemaining(isoString) {
+  const resetTime = new Date(isoString).getTime();
+  const now = Date.now();
+  const diff = Math.max(0, resetTime - now);
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  return `${hours}h${String(minutes).padStart(2, '0')}m`;
+}
+
+function readQuotaCache() {
+  try {
+    if (!fs.existsSync(QUOTA_CACHE_FILE)) return null;
+    const stat = fs.statSync(QUOTA_CACHE_FILE);
+    if (Date.now() - stat.mtime.getTime() > QUOTA_CACHE_TTL * 2) return null;
+    return JSON.parse(fs.readFileSync(QUOTA_CACHE_FILE, 'utf-8'));
+  } catch {
+    return null;
+  }
+}
+
+function refreshQuotaCacheIfNeeded() {
+  try {
+    const needsRefresh = !fs.existsSync(QUOTA_CACHE_FILE) ||
+      (Date.now() - fs.statSync(QUOTA_CACHE_FILE).mtime.getTime()) > QUOTA_CACHE_TTL;
+    if (needsRefresh) {
+      const quotaPath = path.join(__dirname, 'claude-quota.js');
+      spawn('node', [quotaPath], { detached: true, stdio: 'ignore' });
+    }
+  } catch {
+    // Silently ignore background refresh errors
+  }
 }
 
 function formatSections(sections) {
@@ -67,8 +103,11 @@ try {
   const model = input.model.display_name;
   sections.push({ text: model, bgColor: "rgb(68, 68, 68)" });
 
-  // Context window usage
+  // Combined Claude metrics: C:CTX% S:SESS%/XhXm W:WEEKLY%/wed-HH:MM
   const contextWindow = input.context_window;
+  let claudeText = '';
+  let claudeBgColor = 'rgb(217, 119, 87)';
+  let claudeColor = 'rgb(0, 0, 0)';
 
   if (contextWindow?.current_usage && contextWindow?.context_window_size) {
     const usage = contextWindow.current_usage;
@@ -77,12 +116,33 @@ try {
                           (usage.cache_creation_input_tokens || 0) +
                           (usage.cache_read_input_tokens || 0);
     const contextSize = contextWindow.context_window_size;
-    const percent = Math.round((currentTokens / contextSize) * 100);
-    const isDumbZone = percent > CLAUDE_DUMB_ZONE;
-    const bgColor = isDumbZone ? "rgb(226, 0, 0)" : "rgb(217, 119, 87)";
-    const color = isDumbZone ? "rgb(255, 255, 255)" : "rgb(0, 0, 0)";
-    sections.push({ text: `${percent}%`, bgColor, color });
+    const ctxPercent = Math.round((currentTokens / contextSize) * 100);
+
+    claudeText = `󰆪 ${ctxPercent}%`;
+
+    // Set color based on context window usage
+    const isDumbZone = ctxPercent > CLAUDE_DUMB_ZONE;
+    claudeBgColor = isDumbZone ? 'rgb(226, 0, 0)' : 'rgb(217, 119, 87)';
+    claudeColor = isDumbZone ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 0)';
+
+    // Add quota info if available
+    const quotaData = readQuotaCache();
+    if (quotaData?.session && quotaData?.weekly) {
+      const sessPercent = quotaData.session.quota;
+      const sessRemaining = formatQuotaRemaining(quotaData.session.resetsAt);
+      claudeText += ` 󰥔 ${sessPercent}% ${sessRemaining}`;
+
+      const weekPercent = quotaData.weekly.quota;
+      const resetDate = new Date(quotaData.weekly.resetsAt);
+      const dayName = resetDate.toLocaleDateString('fr-FR', { weekday: 'short' }).toLowerCase().replace(/\./g, '');
+      const time = resetDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      claudeText += ` 󱨲 ${weekPercent}% ${dayName} ${time}`;
+    }
+
+    sections.push({ text: claudeText, bgColor: claudeBgColor, color: claudeColor });
   }
+
+  refreshQuotaCacheIfNeeded();
 
   console.log(formatSections(sections));
 } catch (error) {
