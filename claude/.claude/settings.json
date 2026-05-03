@@ -105,5 +105,6 @@
   "spinnerTipsEnabled": false,
   "effortLevel": "xhigh",
   "promptSuggestionEnabled": false,
-  "awaySummaryEnabled": false
+  "awaySummaryEnabled": false,
+  "skipDangerousModePermissionPrompt": true
 }
