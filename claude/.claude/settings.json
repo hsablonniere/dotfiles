@@ -106,5 +106,6 @@
   "effortLevel": "xhigh",
   "promptSuggestionEnabled": false,
   "awaySummaryEnabled": false,
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "preferredNotifChannel": "ghostty"
 }
