@@ -79,6 +79,7 @@
       "Read(~/.config/*)"
     ]
   },
+  "model": "opus",
   "hooks": {
     "Stop": [
       {
