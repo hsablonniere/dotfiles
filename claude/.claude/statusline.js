@@ -25,15 +25,6 @@ function ansi(text, bgColor, color = 'rgb(255, 255, 255)') {
   return `${RESET}${bgColorAnsi}${colorAnsi}${text}${RESET}`;
 }
 
-function formatQuotaRemaining(isoString) {
-  const resetTime = new Date(isoString).getTime();
-  const now = Date.now();
-  const diff = Math.max(0, resetTime - now);
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  return `${hours}h${String(minutes).padStart(2, '0')}m`;
-}
-
 function readQuotaCache() {
   try {
     if (!fs.existsSync(QUOTA_CACHE_FILE)) return null;
@@ -56,6 +47,23 @@ function refreshQuotaCacheIfNeeded() {
   } catch {
     // Silently ignore background refresh errors
   }
+}
+
+function formatModelName(displayName) {
+  const match = displayName.match(/(\w+)\s+(\d+\.\d+)/);
+  if (!match) return displayName;
+
+  const model = match[1];
+  const version = match[2];
+  const modelInitial = model[0].toUpperCase();
+  const shortVersion = version.replace('.', '');
+
+  let result = `${modelInitial}${shortVersion}`;
+  if (displayName.includes('1M')) {
+    result += '-1M';
+  }
+
+  return result;
 }
 
 function formatSections(sections) {
@@ -100,7 +108,7 @@ try {
     sections.push({ text: branch, bgColor: "rgb(70, 107, 62)" });
   }
   
-  const model = input.model.display_name;
+  const model = formatModelName(input.model.display_name);
   sections.push({ text: model, bgColor: "rgb(68, 68, 68)" });
 
   // Combined Claude metrics: C:CTX% S:SESS%/XhXm W:WEEKLY%/wed-HH:MM
@@ -129,12 +137,13 @@ try {
     const quotaData = readQuotaCache();
     if (quotaData?.session && quotaData?.weekly) {
       const sessPercent = quotaData.session.quota;
-      const sessRemaining = formatQuotaRemaining(quotaData.session.resetsAt);
-      claudeText += ` 󰥔 ${sessPercent}% ${sessRemaining}`;
+      const sessResetDate = new Date(quotaData.session.resetsAt);
+      const sessTime = sessResetDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      claudeText += ` 󰥔 ${sessPercent}% ${sessTime}`;
 
       const weekPercent = quotaData.weekly.quota;
       const resetDate = new Date(quotaData.weekly.resetsAt);
-      const dayName = resetDate.toLocaleDateString('fr-FR', { weekday: 'short' }).toLowerCase().replace(/\./g, '');
+      const dayName = resetDate.toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 2);
       const time = resetDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
       claudeText += ` 󱨲 ${weekPercent}% ${dayName} ${time}`;
     }
