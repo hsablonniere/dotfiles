@@ -143,9 +143,12 @@ try {
 
       const weekPercent = quotaData.weekly.quota;
       const resetDate = new Date(quotaData.weekly.resetsAt);
+      const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+      const timeRemaining = Math.max(0, resetDate.getTime() - Date.now());
+      const idealPercent = Math.round(((SEVEN_DAYS - timeRemaining) / SEVEN_DAYS) * 100);
       const dayName = resetDate.toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 2);
       const time = resetDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-      claudeText += ` 󱨲 ${weekPercent}% ${dayName} ${time}`;
+      claudeText += ` 󱨲 ${weekPercent}%/${idealPercent}% ${dayName} ${time}`;
     }
 
     sections.push({ text: claudeText, bgColor: claudeBgColor, color: claudeColor });
