@@ -129,6 +129,18 @@ function formatRemaining(isoString) {
 }
 
 /**
+ * @param {string} resetsAt - ISO date string for weekly quota reset
+ * @returns {number} Ideal usage percentage based on elapsed time in the week
+ */
+function computeIdealPercent(resetsAt) {
+  const now = Date.now();
+  const resetTime = new Date(resetsAt).getTime();
+  const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+  const timeRemaining = Math.max(0, resetTime - now);
+  return Math.round(((SEVEN_DAYS - timeRemaining) / SEVEN_DAYS) * 100);
+}
+
+/**
  * @param {CacheData} data
  */
 function printHuman(data) {
@@ -138,7 +150,7 @@ function printHuman(data) {
 
   console.log(`Session quota: ${data.session.quota}% used`);
   console.log(`Resets in ${sessionRemaining} at ${sessionTime.time}\n`);
-  console.log(`Weekly quota: ${data.weekly.quota}% used`);
+  console.log(`Weekly quota: ${data.weekly.quota}% used (ideal: ${data.weekly.idealPercent ?? computeIdealPercent(data.weekly.resetsAt)}%)`);
   console.log(`Resets at ${weeklyTime.time} on ${weeklyTime.day} ${new Date(data.weekly.resetsAt).getDate()}`);
 }
 
@@ -148,7 +160,11 @@ function printHuman(data) {
 function printJson(data) {
   console.log(JSON.stringify({
     session: { quota: data.session.quota, resetsAt: data.session.resetsAt },
-    weekly: { quota: data.weekly.quota, resetsAt: data.weekly.resetsAt },
+    weekly: {
+      quota: data.weekly.quota,
+      resetsAt: data.weekly.resetsAt,
+      idealPercent: computeIdealPercent(data.weekly.resetsAt),
+    },
   }));
 }
 
@@ -173,6 +189,7 @@ async function main() {
         weekly: {
           quota: apiData.seven_day.utilization,
           resetsAt: apiData.seven_day.resets_at,
+          idealPercent: computeIdealPercent(apiData.seven_day.resets_at),
         },
       };
       writeCache(data);
