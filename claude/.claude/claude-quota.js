@@ -85,7 +85,8 @@ function fetchFromApi() {
               const msg = parsed.error || parsed.message || `HTTP ${res.statusCode}`;
               return reject(new Error(`API returned ${res.statusCode}: ${msg}`));
             }
-            if (!parsed.five_hour?.utilization || !parsed.seven_day?.utilization) {
+            if (parsed.five_hour?.utilization == null || parsed.seven_day?.utilization == null) {
+		    console.error(res.statusCode, data);
               return reject(new Error('Invalid API response format: missing quota data'));
             }
             resolve(parsed);
