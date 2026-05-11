@@ -51,16 +51,30 @@ function writeCache(data) {
 }
 
 /**
+ * @returns {{token: string | undefined, expiresAt: number | undefined}}
+ */
+function readTokenInfo() {
+  const credentials = JSON.parse(fs.readFileSync(CREDENTIALS_FILE, 'utf-8'));
+  return {
+    token: credentials.claudeAiOauth?.accessToken,
+    expiresAt: credentials.claudeAiOauth?.expiresAt,
+  };
+}
+
+/**
  * @returns {Promise<ApiResponse>}
  */
 function fetchFromApi() {
   return new Promise((resolve, reject) => {
     try {
-      const credentials = JSON.parse(fs.readFileSync(CREDENTIALS_FILE, 'utf-8'));
-      const token = credentials.claudeAiOauth?.accessToken;
+      const { token, expiresAt } = readTokenInfo();
 
       if (!token) {
         throw new Error('No access token found in credentials');
+      }
+
+      if (expiresAt && Date.now() > expiresAt) {
+        throw new Error('Authentication token expired. Run `claude` to refresh it, then try again.');
       }
 
       const url = new URL('https://api.anthropic.com/api/oauth/usage');
@@ -82,7 +96,9 @@ function fetchFromApi() {
           try {
             const parsed = JSON.parse(data);
             if (res.statusCode !== 200) {
-              const msg = parsed.error || parsed.message || `HTTP ${res.statusCode}`;
+              const msg = typeof parsed.error === 'string'
+                ? parsed.error
+                : (parsed.message || JSON.stringify(parsed.error || parsed));
               return reject(new Error(`API returned ${res.statusCode}: ${msg}`));
             }
             if (parsed.five_hour?.utilization == null || parsed.seven_day?.utilization == null) {
@@ -194,6 +210,11 @@ async function main() {
       };
       writeCache(data);
     } catch (error) {
+      const msg = error.message;
+      const isAuthError = msg.includes('401') || msg.includes('Authentication token expired');
+      if (isAuthError) {
+        try { fs.unlinkSync(CACHE_FILE); } catch {}
+      }
       console.error(`Error: ${error.message}`);
       process.exit(1);
     }
