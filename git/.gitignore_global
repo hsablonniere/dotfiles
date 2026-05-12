@@ -5,3 +5,5 @@
 .playwright-cli/
 .playwright/
 .vite/
+.pi/
+.agents/
