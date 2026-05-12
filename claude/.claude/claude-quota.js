@@ -30,12 +30,39 @@ function getCacheAge() {
 }
 
 /**
+ * @param {any} data
+ * @returns {data is CacheData}
+ */
+function isValidCacheData(data) {
+  return (
+    data !== null &&
+    typeof data === 'object' &&
+    data.session !== undefined &&
+    data.session !== null &&
+    typeof data.session === 'object' &&
+    typeof data.session.quota === 'number' &&
+    typeof data.session.resetsAt === 'string' &&
+    data.weekly !== undefined &&
+    data.weekly !== null &&
+    typeof data.weekly === 'object' &&
+    typeof data.weekly.quota === 'number' &&
+    typeof data.weekly.resetsAt === 'string'
+  );
+}
+
+/**
  * @returns {CacheData | null}
  */
 function readCache() {
   if (getCacheAge() < CACHE_TTL && fs.existsSync(CACHE_FILE)) {
     try {
-      return JSON.parse(fs.readFileSync(CACHE_FILE, 'utf-8'));
+      const raw = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf-8'));
+      if (isValidCacheData(raw)) {
+        return raw;
+      }
+      // Cache is corrupted / invalid, remove it
+      fs.unlinkSync(CACHE_FILE);
+      return null;
     } catch {
       return null;
     }
