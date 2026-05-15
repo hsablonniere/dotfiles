@@ -108,7 +108,15 @@ try {
     sections.push({ text: branch, bgColor: "rgb(70, 107, 62)" });
   }
   
-  const model = formatModelName(input.model.display_name);
+  let model = formatModelName(input.model.display_name);
+
+  // Add effort level if available
+  if (input.effort?.level) {
+    const effortMap = { low: 'lo', medium: 'md', high: 'hi', xhigh: 'xh', max: 'mx' };
+    const effortCode = effortMap[input.effort.level] || input.effort.level;
+    model += `:${effortCode}`;
+  }
+
   sections.push({ text: model, bgColor: "rgb(68, 68, 68)" });
 
   // Combined Claude metrics: C:CTX% S:SESS%/XhXm W:WEEKLY%/wed-HH:MM
