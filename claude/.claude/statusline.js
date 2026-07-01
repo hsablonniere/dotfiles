@@ -50,7 +50,7 @@ function refreshQuotaCacheIfNeeded() {
 }
 
 function formatModelName(displayName) {
-  const match = displayName.match(/(\w+)\s+(\d+\.\d+)/);
+  const match = displayName.match(/(\w+)\s+(\d+(?:\.\d+)?)/);
   if (!match) return displayName;
 
   const model = match[1];
