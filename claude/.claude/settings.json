@@ -111,5 +111,6 @@
   "skipDangerousModePermissionPrompt": true,
   "preferredNotifChannel": "ghostty",
   "autoCompactEnabled": false,
+  "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true
 }
