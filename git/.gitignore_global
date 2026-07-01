@@ -2,6 +2,7 @@
 .env*
 .claude/settings.local.json
 .claude/worktrees/
+.claude/skills/
 .playwright-cli/
 .playwright/
 .vite/
