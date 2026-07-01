@@ -107,6 +107,7 @@
   "effortLevel": "xhigh",
   "promptSuggestionEnabled": false,
   "awaySummaryEnabled": false,
+  "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "preferredNotifChannel": "ghostty",
   "autoCompactEnabled": false,
