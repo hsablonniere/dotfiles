@@ -73,7 +73,9 @@
       "Bash(node --check:*)"
     ],
     "deny": [
-      "Read(.env*)"
+      "Read(.env*)",
+      "Bash(gh auth token)",
+      "Bash(glab auth status --show-token)"
     ],
     "ask": [
       "Read(~/.config/*)"
