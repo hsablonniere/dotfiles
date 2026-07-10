@@ -75,7 +75,8 @@
     "deny": [
       "Read(.env*)",
       "Bash(gh auth token)",
-      "Bash(glab auth status --show-token)"
+      "Bash(glab auth status --show-token)",
+      "Bash(clever profile switch:*)"
     ],
     "ask": [
       "Read(~/.config/*)"
