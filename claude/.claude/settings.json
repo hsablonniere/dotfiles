@@ -87,6 +87,7 @@
     ]
   },
   "disableWorkflows": true,
+  "disableClaudeAiConnectors": true,
   "hooks": {
     "Stop": [
       {
@@ -99,6 +100,7 @@
       }
     ]
   },
+  "disableArtifact": true,
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.js",
