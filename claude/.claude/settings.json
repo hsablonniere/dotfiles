@@ -114,7 +114,7 @@
   "outputStyle": "minimaliste",
   "language": "French",
   "spinnerTipsEnabled": false,
-  "effortLevel": "xhigh",
+  "effortLevel": "high",
   "promptSuggestionEnabled": false,
   "awaySummaryEnabled": false,
   "tui": "fullscreen",
