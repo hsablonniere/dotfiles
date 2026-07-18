@@ -1,6 +1,6 @@
 {
   "cleanupPeriodDays": 36500,
-  "includeCoAuthoredBy": false,
+  "autoCompactEnabled": false,
   "permissions": {
     "allow": [
       "Skill(commit)",
@@ -86,8 +86,8 @@
       "Read(~/.config/*)"
     ]
   },
-  "disableWorkflows": true,
-  "disableClaudeAiConnectors": true,
+  "skipDangerousModePermissionPrompt": true,
+  "skipAutoPermissionPrompt": true,
   "hooks": {
     "Stop": [
       {
@@ -100,7 +100,9 @@
       }
     ]
   },
+  "disableWorkflows": true,
   "disableArtifact": true,
+  "disableClaudeAiConnectors": true,
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.js",
@@ -111,16 +113,14 @@
     "typescript-lsp@claude-plugins-official": false,
     "plugin-dev@claude-plugins-official": false
   },
+  "effortLevel": "high",
   "outputStyle": "minimaliste",
   "language": "French",
+  "includeCoAuthoredBy": false,
+  "tui": "fullscreen",
   "spinnerTipsEnabled": false,
-  "effortLevel": "high",
   "promptSuggestionEnabled": false,
   "awaySummaryEnabled": false,
-  "tui": "fullscreen",
-  "skipDangerousModePermissionPrompt": true,
   "preferredNotifChannel": "ghostty",
-  "autoCompactEnabled": false,
-  "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "agentPushNotifEnabled": true
 }
