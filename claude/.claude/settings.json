@@ -129,6 +129,11 @@
   "language": "French",
   "includeCoAuthoredBy": false,
   "tui": "fullscreen",
+  "voiceEnabled": true,
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
   "spinnerTipsEnabled": false,
   "promptSuggestionEnabled": false,
   "awaySummaryEnabled": false,
