@@ -68,6 +68,22 @@ A simple Git terminal UI for lazy developers.
 
 **Config location:** `.config/lazygit/config.yml`
 
+### [Neovim](https://neovim.io/)
+
+A hyperextensible Vim-based text editor.
+
+The configuration is written from scratch and stays small.
+
+**Config location:** `.config/nvim/`
+
+- `init.lua` - Options, key mappings and the plugin list
+- `after/ftplugin/markdown.lua` - Markdown specific settings
+
+> **Note:** Plugins are managed with `vim.pack`, the package manager built into
+> Neovim 0.12. They are cloned outside this repository, under
+> `~/.local/share/nvim/site/pack/`, so a fresh install needs a first `nvim` run.
+> Update them with `:lua vim.pack.update()`.
+
 ### [npm](https://www.npmjs.com/)
 
 npm is the package manager for JavaScript.
