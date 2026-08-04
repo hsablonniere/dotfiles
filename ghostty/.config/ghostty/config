@@ -33,6 +33,10 @@ keybind = alt+q=new_split:right
 keybind = alt+shift+q=new_split:down
 keybind = ctrl+w=close_surface
 
+# Move tab left/right (overrides default jump_to_prompt)
+keybind = ctrl+shift+page_up=move_tab:-1
+keybind = ctrl+shift+page_down=move_tab:1
+
 # Split pane navigation with Alt + arrow keys
 keybind = alt+left=goto_split:left
 keybind = alt+right=goto_split:right
