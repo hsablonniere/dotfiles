@@ -1,3 +1,3 @@
-function j --description 'Alias for journal'
-    journal $argv
+function j --description 'Alias for journal show'
+    journal show $argv
 end
