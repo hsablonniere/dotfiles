@@ -4,7 +4,7 @@ function u --description "Update all packages (yay, npm global, cargo)"
 
     echo ""
     echo "==> Updating global npm packages..."
-    npm update -g
+    npm update -g --no-fund
 
     echo ""
     echo "==> Updating cargo packages..."
