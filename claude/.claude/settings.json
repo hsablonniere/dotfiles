@@ -84,7 +84,8 @@
     ],
     "ask": [
       "Read(~/.config/*)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "skipDangerousModePermissionPrompt": true,
   "skipAutoPermissionPrompt": true,
