@@ -140,5 +140,6 @@
   "awaySummaryEnabled": false,
   "autoMemoryEnabled": false,
   "preferredNotifChannel": "ghostty",
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "model": "opus[1m]"
 }
