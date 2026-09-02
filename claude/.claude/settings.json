@@ -1,6 +1,49 @@
 {
-  "cleanupPeriodDays": 36500,
+  "agentPushNotifEnabled": true,
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  },
   "autoCompactEnabled": false,
+  "autoMemoryEnabled": false,
+  "awaySummaryEnabled": false,
+  "cleanupPeriodDays": 36500,
+  "disableArtifact": true,
+  "disableClaudeAiConnectors": true,
+  "disableWorkflows": true,
+  "effortLevel": "medium",
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "plugin-dev@claude-plugins-official": false,
+    "typescript-lsp@claude-plugins-official": false
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "rtk hook claude",
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "~/.claude/hooks/speak.sh",
+            "type": "command"
+          }
+        ]
+      }
+    ]
+  },
+  "language": "French",
+  "model": "opus[1m]",
+  "outputStyle": "minimaliste",
   "permissions": {
     "allow": [
       "Skill(commit)",
@@ -72,6 +115,10 @@
       "Bash(npm search:*)",
       "Bash(node --check:*)"
     ],
+    "ask": [
+      "Read(~/.config/*)"
+    ],
+    "defaultMode": "auto",
     "deny": [
       "DesignSync",
       "NotebookEdit",
@@ -81,65 +128,22 @@
       "Bash(gh auth token)",
       "Bash(glab auth status --show-token)",
       "Bash(clever profile switch:*)"
-    ],
-    "ask": [
-      "Read(~/.config/*)"
-    ],
-    "defaultMode": "auto"
-  },
-  "skipDangerousModePermissionPrompt": true,
-  "skipAutoPermissionPrompt": true,
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/speak.sh"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "rtk hook claude"
-          }
-        ]
-      }
     ]
   },
-  "disableWorkflows": true,
-  "disableArtifact": true,
-  "disableClaudeAiConnectors": true,
+  "preferredNotifChannel": "ghostty",
+  "promptSuggestionEnabled": false,
+  "skipAutoPermissionPrompt": true,
+  "skipDangerousModePermissionPrompt": true,
+  "spinnerTipsEnabled": false,
   "statusLine": {
-    "type": "command",
     "command": "~/.claude/statusline.js",
-    "padding": 0
+    "padding": 0,
+    "type": "command"
   },
-  "enabledPlugins": {
-    "frontend-design@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": false,
-    "plugin-dev@claude-plugins-official": false
-  },
-  "effortLevel": "medium",
-  "outputStyle": "minimaliste",
-  "language": "French",
-  "includeCoAuthoredBy": false,
   "tui": "fullscreen",
-  "voiceEnabled": true,
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
-  "spinnerTipsEnabled": false,
-  "promptSuggestionEnabled": false,
-  "awaySummaryEnabled": false,
-  "autoMemoryEnabled": false,
-  "preferredNotifChannel": "ghostty",
-  "agentPushNotifEnabled": true,
-  "model": "opus[1m]"
+  "voiceEnabled": true
 }
