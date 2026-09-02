@@ -42,7 +42,6 @@
     ]
   },
   "language": "French",
-  "model": "opus[1m]",
   "outputStyle": "minimaliste",
   "permissions": {
     "allow": [
