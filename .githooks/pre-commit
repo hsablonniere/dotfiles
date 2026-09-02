@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Sort keys of staged settings.json files (Claude Code rewrites them with
+# unstable key order, which pollutes diffs).
+set -euo pipefail
+
+for file in $(git diff --cached --name-only --diff-filter=ACM | grep 'settings\.json$' || true); do
+  tmp="$(mktemp)"
+  jq -S . "$file" > "$tmp"
+  mv "$tmp" "$file"
+  git add "$file"
+done
