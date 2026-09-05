@@ -10,7 +10,7 @@
 [rebase]
 	autosquash = true
 [push]
-	default = matching
+	default = current
 [commit]
 	gpgsign = true
 [init]
