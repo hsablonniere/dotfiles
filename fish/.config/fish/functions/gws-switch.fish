@@ -10,9 +10,9 @@ function gws-switch --description "Switch active gws account"
         set -l name (basename $dir)
         set -l email (GOOGLE_WORKSPACE_CLI_CONFIG_DIR=$dir gws auth status 2>/dev/null \
             | sed -n '/^{/,$p' | jq -r '.user // "?"')
-        set -l mark "  "
-        test "$name" = "$current"; and set mark "* "
-        set -a rows "$mark$name"\t"$email"
+        set -l mark "-"
+        test "$name" = "$current"; and set mark "*"
+        set -a rows "$mark"\t"$name"\t"$email"
     end
 
     if test (count $rows) -eq 0

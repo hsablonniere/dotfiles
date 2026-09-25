@@ -11,6 +11,10 @@ function gws-add --description "Add a new gws account" --argument-names name
     end
 
     mkdir -p $target
+
+    set -l existing_secret (ls ~/.config/gws-accounts/*/client_secret.json 2>/dev/null | head -n 1)
+    test -n "$existing_secret"; and cp $existing_secret $target/client_secret.json
+
     ln -sfn $target ~/.config/gws
     gws auth login $argv[2..]
 end
