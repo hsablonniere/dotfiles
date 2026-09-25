@@ -1,0 +1,3 @@
+# settings.json is a real file in ~/.claude (it holds private keys),
+# see scripts/claude-settings-export.sh.
+^/\.claude/settings\.json$

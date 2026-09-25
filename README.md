@@ -25,6 +25,11 @@ Claude Code is Anthropic's official CLI tool for Claude.
 - `settings.json` - CLI settings and preferences
 - `statusline.js` - Custom statusline configuration
 
+> **Note:** `~/.claude/settings.json` is a real file, not a symlink, because it holds private keys (e.g. `autoMode`).
+> `claude/.claude/settings.json` is a public copy exported from it by `scripts/claude-settings-export.sh`, which strips those keys.
+> Stow ignores it (see `claude/.stow-local-ignore`).
+> On a new machine, copy it manually: `cp claude/.claude/settings.json ~/.claude/settings.json`.
+
 ### [Fish Shell](https://fishshell.com/)
 
 Fish is a user-friendly shell with powerful command-line completions and syntax highlighting.
