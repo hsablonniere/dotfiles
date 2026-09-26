@@ -1,0 +1,4 @@
+# Config from scratch in progress, not ready to replace kickstart.nvim yet.
+# Used for now via the `nn` fish function (XDG_CONFIG_HOME override), not stow.
+# Remove this file once ready to make it the default `nvim` config.
+^/\.config/nvim$
