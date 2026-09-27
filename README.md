@@ -61,12 +61,6 @@ Git version control system configuration.
 
 > **Note:** Some configuration details are stored in `~/.gitconfig_private` for privacy.
 
-### [Lazydocker](https://github.com/jesseduffield/lazydocker)
-
-A simple Docker terminal UI.
-
-**Config location:** `.config/lazydocker/config.yml`
-
 ### [Lazygit](https://github.com/jesseduffield/lazygit)
 
 A simple Git terminal UI for lazy developers.
