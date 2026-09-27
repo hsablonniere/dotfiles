@@ -95,12 +95,6 @@ Visual Studio Code editor configuration.
 - `keybindings.json` - Custom keyboard shortcuts
 - `.markdownlintrc.json` - Markdown linting rules
 
-### [Window Key Switcher](https://github.com/hsablonniere/window-key-switcher)
-
-Custom tool for managing window management keybindings.
-
-**Config location:** `.config/window-key-switcher/`
-
 ### [Yazi](https://github.com/sxyazi/yazi)
 
 A blazing fast terminal file manager written in Rust.
