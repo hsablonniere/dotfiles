@@ -79,6 +79,15 @@ npm is the package manager for JavaScript.
 
 - `ignore-scripts=true` - Disables automatic script execution for security
 
+### [Pi](https://pi.dev/)
+
+Pi, a terminal coding agent.
+
+**Config location:** `.pi/agent/`
+
+- `settings.json` - Default provider, model and theme
+- `extensions/statusline.ts` - Powerline status bar replacing the footer, inspired by the Claude Code one
+
 ### [Starship](https://starship.rs/)
 
 A cross-platform prompt that's fast, customizable, and showing the information you need.
@@ -100,6 +109,12 @@ Visual Studio Code editor configuration.
 A blazing fast terminal file manager written in Rust.
 
 **Config location:** `.config/yazi/yazi.toml`
+
+## Scripts
+
+`scripts/` holds helper scripts, not meant to be stowed:
+
+- `claude-settings-export.sh` - Exports a public copy of `~/.claude/settings.json` without its private keys
 
 ## Management via Stow
 
