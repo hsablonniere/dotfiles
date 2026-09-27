@@ -24,6 +24,9 @@ Claude Code is Anthropic's official CLI tool for Claude.
 
 - `settings.json` - CLI settings and preferences
 - `statusline.js` - Custom statusline configuration
+- `claude-quota.js` - Fetches and caches the session and weekly usage quotas
+- `hooks/` - Hook scripts (`speak.sh`: text-to-speech, toggled by `~/.local/state/speak-enabled`)
+- `output-styles/` - Custom output styles (`minimaliste.md`)
 
 > **Note:** `~/.claude/settings.json` is a real file, not a symlink, because it holds private keys (e.g. `autoMode`).
 > `claude/.claude/settings.json` is a public copy exported from it by `scripts/claude-settings-export.sh`, which strips those keys.
@@ -41,7 +44,7 @@ Fish is a user-friendly shell with powerful command-line completions and syntax 
 - `conf.d/` - Fish configuration files that are sourced automatically on shell startup
   - Includes keybindings for various shortcuts (e.g., `Alt+H`, `Alt+J`, `Alt+K`)
   - History configuration via Atuin integration
-- `functions/` - Custom Fish functions (54 custom command shortcuts and utilities)
+- `functions/` - Custom Fish functions (command shortcuts and utilities)
   - Git-related shortcuts (`ga`, `gabs`, `grbim`, `gfom`, etc.)
   - Utility functions (`c`, `cc`, `cert`, `copy`, `cr`, `ex` and many more)
 
@@ -102,13 +105,17 @@ Visual Studio Code editor configuration.
 
 - `settings.json` - Editor settings and preferences
 - `keybindings.json` - Custom keyboard shortcuts
-- `.markdownlintrc.json` - Markdown linting rules
+
+Also `~/.markdownlintrc.json`, the Markdown linting rules.
 
 ### [Yazi](https://github.com/sxyazi/yazi)
 
 A blazing fast terminal file manager written in Rust.
 
-**Config location:** `.config/yazi/yazi.toml`
+**Config location:** `.config/yazi/`
+
+- `yazi.toml` - General settings
+- `keymap.toml` - Custom keybindings
 
 ## Scripts
 
