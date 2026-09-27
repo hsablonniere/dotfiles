@@ -5,6 +5,7 @@ if status is-interactive
         commandline ""
         echo
         eval "$current_commandline --help"
+        echo
         commandline "$current_commandline"
         commandline -f repaint
     end
