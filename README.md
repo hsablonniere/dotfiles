@@ -61,12 +61,6 @@ Git version control system configuration.
 
 > **Note:** Some configuration details are stored in `~/.gitconfig_private` for privacy.
 
-### [Lazygit](https://github.com/jesseduffield/lazygit)
-
-A simple Git terminal UI for lazy developers.
-
-**Config location:** `.config/lazygit/config.yml`
-
 ### [Neovim](https://neovim.io/)
 
 A hyperextensible Vim-based text editor.
