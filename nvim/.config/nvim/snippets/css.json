@@ -1,0 +1,23 @@
+{
+  "cc": {
+    "prefix": "cc",
+    "body": [
+      "calc($0)"
+    ],
+    "description": "calc"
+  },
+  "dg": {
+    "prefix": "dg",
+    "body": [
+      "display: grid;"
+    ],
+    "description": "display: grid;"
+  },
+  "vv": {
+    "prefix": "vv",
+    "body": [
+      "var(--$0)"
+    ],
+    "description": "variable"
+  }
+}

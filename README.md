@@ -77,17 +77,11 @@ A simple Git terminal UI for lazy developers.
 
 A hyperextensible Vim-based text editor.
 
-The configuration is written from scratch and stays small.
-
 **Config location:** `.config/nvim/`
 
-- `init.lua` - Options, key mappings and the plugin list
-- `after/ftplugin/markdown.lua` - Markdown specific settings
-
-> **Note:** Plugins are managed with `vim.pack`, the package manager built into
-> Neovim 0.12. They are cloned outside this repository, under
-> `~/.local/share/nvim/site/pack/`, so a fresh install needs a first `nvim` run.
-> Update them with `:lua vim.pack.update()`.
+Written from scratch, with habits carried over from WebStorm. See its
+[README](nvim/.config/nvim/README.md) for the structure and the
+[cheatsheet](nvim/.config/nvim/docs/cheatsheet.md) for the keymaps.
 
 ### [npm](https://www.npmjs.com/)
 

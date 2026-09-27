@@ -1,0 +1,44 @@
+{
+  "!": {
+    "prefix": "!",
+    "body": [
+      "<!doctype html>",
+      "<html lang=\"en\">",
+      "<head>",
+      "  <meta charset=\"utf-8\">",
+      "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+      "  <link rel=\"icon\" href=\"data:image/x-icon;base64,AA\">",
+      "  <title>${1:Document}</title>",
+      "</head>",
+      "<body>",
+      "  <h1>$1</h1>",
+      "  $0",
+      "</body>",
+      "</html>"
+    ],
+    "description": "!"
+  },
+  "hi18n": {
+    "prefix": "hi18n",
+    "body": [
+      "\\${i18n('${1:component_name}.${2:key}')}$0"
+    ],
+    "description": "i18n in a template string"
+  },
+  "iff": {
+    "prefix": "iff",
+    "body": [
+      "\\${${1:if} ? html`",
+      "  $0",
+      "` : ''}"
+    ],
+    "description": "lit ternary block"
+  },
+  "smod": {
+    "prefix": "smod",
+    "body": [
+      "<script type=\"module\" src=\"${1:url}\"></script>$0"
+    ],
+    "description": "script tag type module"
+  }
+}

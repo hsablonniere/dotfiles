@@ -1,0 +1,243 @@
+{
+  ".sub": {
+    "prefix": ".sub",
+    "body": [
+      ".subscribe((${1:param}) => {$0})"
+    ],
+    "description": "subscribe observable"
+  },
+  "aa": {
+    "prefix": "aa",
+    "body": [
+      "(${1:args}) => $0"
+    ],
+    "description": "arrow fn"
+  },
+  "aaa": {
+    "prefix": "aaa",
+    "body": [
+      "(${1:args}) => {",
+      "  $0",
+      "}"
+    ],
+    "description": "arrow fun"
+  },
+  "dce": {
+    "prefix": "dce",
+    "body": [
+      "document.createElement('${1:tag}');$0"
+    ],
+    "description": "document.createElement()"
+  },
+  "dd": {
+    "prefix": "dd",
+    "body": [
+      "describe('${1:label}', () => {",
+      "",
+      "  $0",
+      "})"
+    ],
+    "description": "describe"
+  },
+  "dqs": {
+    "prefix": "dqs",
+    "body": [
+      "document.querySelector('$0')"
+    ],
+    "description": "dqs"
+  },
+  "dqsa": {
+    "prefix": "dqsa",
+    "body": [
+      "document.querySelectorAll('$0')"
+    ],
+    "description": "dqsa"
+  },
+  "ff": {
+    "prefix": "ff",
+    "body": [
+      "function ${1:name} (${2:args}) {",
+      "  $0",
+      "}"
+    ],
+    "description": "named function"
+  },
+  "hi18n": {
+    "prefix": "hi18n",
+    "body": [
+      "\\${i18n('${1:component_name}.${2:key}')}$0"
+    ],
+    "description": "i18n in a template string"
+  },
+  "i": {
+    "prefix": "i",
+    "body": [
+      "import '${1:import}';$0"
+    ],
+    "description": "import"
+  },
+  "i18n": {
+    "prefix": "i18n",
+    "body": [
+      "'${1:component_name}.${2:key}': `${3:value}`,$0"
+    ],
+    "description": "i18n string"
+  },
+  "i18nn": {
+    "prefix": "i18nn",
+    "body": [
+      "'${1:component_name}.${2:key}': ({ ${3:params} }) => `${4:value}`,$0"
+    ],
+    "description": "i18n function"
+  },
+  "if": {
+    "prefix": "if",
+    "body": [
+      "if (${1:cond}) {",
+      "  $0",
+      "}"
+    ],
+    "description": "if"
+  },
+  "iff": {
+    "prefix": "iff",
+    "body": [
+      "\\${${1:if} ? html`",
+      "  $0",
+      "` : ''}"
+    ],
+    "description": "lit ternary block"
+  },
+  "ii": {
+    "prefix": "ii",
+    "body": [
+      "import { ${1:names} } from '${2:import}';$0"
+    ],
+    "description": "import with names"
+  },
+  "it": {
+    "prefix": "it",
+    "body": [
+      "it('${1:label}', () => {",
+      "",
+      "  $0",
+      "})"
+    ],
+    "description": "it"
+  },
+  "jj": {
+    "prefix": "jj",
+    "body": [
+      "/** @type {$0} */"
+    ],
+    "description": "Inline JSDoc type"
+  },
+  "log": {
+    "prefix": "log",
+    "body": [
+      "console.log($0)"
+    ],
+    "description": "console.log"
+  },
+  "logj": {
+    "prefix": "logj",
+    "body": [
+      "console.log(JSON.stringify($0, null, '  '))"
+    ],
+    "description": "console.log with JSON"
+  },
+  "pp": {
+    "prefix": "pp",
+    "body": [
+      "  .then(console.log)",
+      ".catch(console.error)"
+    ],
+    "description": "promise"
+  },
+  "rrd": {
+    "prefix": "rrd",
+    "body": [
+      "Math.random().toString(36).slice(2)"
+    ],
+    "description": "random string"
+  },
+  "rt": {
+    "prefix": "rt",
+    "body": [
+      "return $0"
+    ],
+    "description": "return"
+  },
+  "smod": {
+    "prefix": "smod",
+    "body": [
+      "<script type=\"module\" src=\"${1:url}\"></script>$0"
+    ],
+    "description": "script tag type module"
+  },
+  "td": {
+    "prefix": "td",
+    "body": [
+      "@typedef {import('${1:path}').${2:var}} $2$0"
+    ],
+    "description": "JSDoc typedef import"
+  },
+  "test": {
+    "prefix": "test",
+    "body": [
+      "test('${1:name}', () => {",
+      "",
+      "  $0",
+      "}); "
+    ],
+    "description": "Inserts test() block"
+  },
+  "wc": {
+    "prefix": "wc",
+    "body": [
+      "import { css, html, LitElement } from 'lit';",
+      "",
+      "/**",
+      " * TODO DOCS",
+      " */",
+      "export class ${1:MyComponent} extends LitElement {",
+      "",
+      "  static get properties () {",
+      "    return {};",
+      "  }",
+      "",
+      "  constructor () {",
+      "    super();",
+      "  }",
+      "",
+      "  render () {",
+      "    return html`",
+      "      This is <code>$1</code> component!",
+      "    `;",
+      "  }",
+      "",
+      "  static get styles () {",
+      "    return [",
+      "      // language=CSS",
+      "      css`",
+      "        :host {",
+      "          display: block;",
+      "        }",
+      "      `,",
+      "    ];",
+      "  }",
+      "}",
+      "",
+      "window.customElements.define('${2:my-component}', $1);",
+      "$0"
+    ],
+    "description": "component"
+  },
+  "z": {
+    "prefix": "z",
+    "body": [
+      ".then($0)"
+    ],
+    "description": ".then()"
+  }
+}
