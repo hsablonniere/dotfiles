@@ -15,6 +15,14 @@ require('blink.cmp').setup({
     ['<S-Tab>'] = { 'snippet_backward', 'fallback' },
   },
   completion = {
+    -- Menu only on Ctrl+Space, never while typing
+    trigger = {
+      show_on_keyword = false,
+      show_on_trigger_character = false,
+      show_on_insert_on_trigger_character = false,
+      show_on_backspace_after_accept = false,
+      show_on_backspace_after_insert_enter = false,
+    },
     -- Documentation of the selected item next to the menu
     documentation = { auto_show = true, auto_show_delay_ms = 200 },
     -- Preview of the selected item, in grey, inside the code
