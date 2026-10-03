@@ -64,6 +64,14 @@ Git version control system configuration.
 
 > **Note:** Some configuration details are stored in `~/.gitconfig_private` for privacy.
 
+### [Herdr](https://herdr.dev/)
+
+Herdr is a terminal multiplexer for coding agents (tabs, splits and workspaces).
+
+**Config location:** `.config/herdr/config.toml`
+
+> **Note:** `~/.config/herdr/` also holds runtime files (sockets, logs, `session.json`), so stow links only `config.toml`.
+
 ### [Neovim](https://neovim.io/)
 
 A hyperextensible Vim-based text editor.
