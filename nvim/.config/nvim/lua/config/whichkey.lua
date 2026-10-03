@@ -9,5 +9,17 @@ require('which-key').setup({
     { '<leader>t', group = 'Toggle' },
     { '<leader>w', group = 'Windows' },
     { '<leader>b', group = 'Buffers' },
+    -- Native keys without a usable description
+    { 'gr', group = 'LSP' },
+    { 'grn', desc = 'Rename symbol' },
+    { 'gra', desc = 'Code action', mode = { 'n', 'x' } },
+    { 'grx', desc = 'Run codelens' },
+    { 'gO', desc = 'Symbols of the file' },
+    { 'g%', desc = 'Match backwards' },
+    { 'gJ', desc = 'Join lines without space' },
+    { 'gp', desc = 'Paste after, cursor after text' },
+    { 'gP', desc = 'Paste before, cursor after text' },
+    { 'g_', desc = 'Last non-blank character of line' },
+    { 'ga', desc = 'Character code under cursor' },
   },
 })
