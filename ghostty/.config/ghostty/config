@@ -15,6 +15,9 @@ gtk-tabs-location = top
 gtk-titlebar-style = tabs
 resize-overlay = never
 
+# Start herdr directly instead of a shell
+command = /home/h/.local/share/mise/shims/herdr
+
 # Terminal Behavior
 copy-on-select = false
 mouse-hide-while-typing = true
