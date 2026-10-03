@@ -11,8 +11,10 @@ window-inherit-working-directory = true
 window-theme = system
 window-padding-x = 10
 window-padding-y = 10
+window-padding-balance = true
 window-show-tab-bar = never
-gtk-titlebar-style = native
+window-decoration = client
+gtk-titlebar = false
 resize-overlay = never
 
 # Start herdr directly instead of a shell
