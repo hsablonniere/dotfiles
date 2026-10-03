@@ -1,6 +1,6 @@
 function u --description "Update system (yay), mise tools, flatpaks"
     echo "==> Updating system packages (yay)..."
-    yay -Syu --noconfirm
+    yay -Syu --noconfirm; or return
 
     echo ""
     echo "==> Updating mise tools..."
