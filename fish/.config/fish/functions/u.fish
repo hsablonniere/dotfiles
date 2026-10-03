@@ -1,10 +1,6 @@
-function u --description "Update all packages (yay, npm global, cargo, go)"
+function u --description "Update all packages (yay, cargo, go)"
     echo "==> Updating system packages (yay)..."
     yay -Syu --noconfirm
-
-    echo ""
-    echo "==> Updating global npm packages..."
-    npm update -g --no-fund
 
     echo ""
     echo "==> Updating cargo packages..."
