@@ -109,17 +109,6 @@ A cross-platform prompt that's fast, customizable, and showing the information y
 
 **Config location:** `.config/starship.toml`
 
-### [VS Code](https://code.visualstudio.com/)
-
-Visual Studio Code editor configuration.
-
-**Config location:** `.config/Code/User/`
-
-- `settings.json` - Editor settings and preferences
-- `keybindings.json` - Custom keyboard shortcuts
-
-Also `~/.markdownlintrc.json`, the Markdown linting rules.
-
 ### [Yazi](https://github.com/sxyazi/yazi)
 
 A blazing fast terminal file manager written in Rust.
