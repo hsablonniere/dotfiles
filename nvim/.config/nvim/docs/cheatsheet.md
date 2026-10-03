@@ -281,6 +281,16 @@ Web formatters run only in projects that have their config file (`.prettierrc`, 
 Opening brackets add inner spaces (`sa(` gives `( text )`), closing ones do not (`sa)` gives
 `(text)`). `s` alone no longer replaces a character in normal mode (`cl` does it).
 
+### Auto-closing brackets
+
+In insert mode, typing `(`, `[` or `{` adds the closing one and leaves the cursor between the two.
+Quotes are not paired (it would get in the way in prose: `l'`, `don't`).
+
+| Keys (insert mode) | Action |
+|---|---|
+| `)` `]` `}` before the same closing character | Jump over it instead of typing a second one |
+| `Backspace` between a pair | Delete both characters |
+
 ### Text objects
 
 Used after an action: `d` delete, `c` change, `y` copy, `v` select. `i` = inside, `a` = around.

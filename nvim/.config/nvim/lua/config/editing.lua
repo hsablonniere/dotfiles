@@ -96,6 +96,16 @@ require('mini.surround').setup({
 for key, char in pairs({ ['('] = ')', ['['] = ']', ['{'] = '}', ['`'] = '`', ['*'] = '*' }) do
   vim.keymap.set('x', key, 'sa' .. char, { remap = true, desc = 'Surround selection with ' .. key })
 end
+-- Brackets only: quotes would pair inside prose (l', don't). The cursor ends between the two.
+vim.pack.add({ 'https://github.com/nvim-mini/mini.pairs' })
+require('mini.pairs').setup({
+  modes = { insert = true, command = false, terminal = false },
+  mappings = {
+    ['"'] = false,
+    ["'"] = false,
+    ['`'] = false,
+  },
+})
 -- Native [n / ]n (select the previous / next sibling node) would make [ wait for a second key
 pcall(vim.keymap.del, 'x', '[n')
 pcall(vim.keymap.del, 'x', ']n')
