@@ -101,7 +101,18 @@ vim.o.winborder = 'rounded'
 -- Keymaps on top of the native ones (K, grn, gra, grr, gri, grt, gO, [d, ]d...). Lists open in
 -- the Snacks picker instead of the quickfix list, a single result jumps directly.
 vim.keymap.set('n', 'gd', function() Snacks.picker.lsp_definitions() end, { desc = '[G]oto [D]efinition' })
-vim.keymap.set('n', 'grr', function() Snacks.picker.lsp_references() end, { desc = 'LSP references' })
+-- grr: usages only, the declaration and the import lines are left out (grR keeps everything).
+-- Imports are detected from the line text, a multi-line import shows its names anyway.
+local function is_import(line)
+  return line:match('^%s*import[%s{*"\']') ~= nil or line:match('^%s*export%s.-from%s') ~= nil or line:match('^%s*}%s*from%s') ~= nil
+end
+vim.keymap.set('n', 'grr', function()
+  Snacks.picker.lsp_references({
+    include_declaration = false,
+    transform = function(item) return not is_import(item.line or '') end,
+  })
+end, { desc = 'LSP usages (no imports)' })
+vim.keymap.set('n', 'grR', function() Snacks.picker.lsp_references() end, { desc = 'LSP references (all)' })
 vim.keymap.set('n', 'gri', function() Snacks.picker.lsp_implementations() end, { desc = 'LSP implementations' })
 vim.keymap.set('n', 'grt', function() Snacks.picker.lsp_type_definitions() end, { desc = 'LSP type definition' })
 -- Every diagnostic, not only the ones of files under the working directory (the default)

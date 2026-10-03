@@ -99,7 +99,8 @@ shows in the statusline, e.g. `luals`, `tsc`). All in normal mode, cursor on a s
 | `gd` | Go to definition (`Ctrl+O` to jump back). `Ctrl+]` works too |
 | `grn` | Rename the symbol everywhere |
 | `gra` | Code actions, quick fixes |
-| `grr` | References (picker) |
+| `grr` | Usages (picker), without the declaration and the import lines |
+| `grR` | All references (picker), imports included |
 | `gri` | Implementations (picker) |
 | `grt` | Type definition (picker) |
 | `gO` | Symbols of the current file |
@@ -119,7 +120,7 @@ Language servers are installed by mason (`:Mason` to see them), except `rust-ana
 
 ## Completion (blink.cmp)
 
-The menu opens while typing, with LSP items, file paths, snippets and words of the buffer. The
+The menu opens on `Ctrl+Space` only, never while typing, with LSP items, file paths, snippets and words of the buffer. The
 documentation of the selected item shows next to it, and a grey preview in the code.
 
 | Keys (insert mode) | Action |
