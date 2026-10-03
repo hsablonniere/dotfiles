@@ -28,20 +28,60 @@ shell-integration-features = no-cursor,title
 scrollback-limit = 10000000
 link-url = true
 
-# Custom Keybindings
-keybind = alt+q=new_split:right
-keybind = alt+shift+q=new_split:down
-keybind = ctrl+w=close_surface
+# Moved to herdr (unbound so Ghostty does not consume them first)
+keybind = alt+q=unbind
+keybind = alt+shift+q=unbind
+keybind = alt+left=unbind
+keybind = alt+right=unbind
+keybind = alt+up=unbind
+keybind = alt+down=unbind
+keybind = ctrl+w=unbind
+# ctrl+shift+page_up/down: herdr rejects Page keys, so send alt+shift+h/l (ESC H / ESC L) instead
+keybind = ctrl+shift+page_up=text:\x1bH
+keybind = ctrl+shift+page_down=text:\x1bL
+# ctrl+page_up/down: same trick, send alt+shift+b/n (ESC B / ESC N), not ESC P (DCS) for previous/next tab
+keybind = ctrl+page_up=text:\x1bB
+keybind = ctrl+page_down=text:\x1bN
 
-# Move tab left/right (overrides default jump_to_prompt)
-keybind = ctrl+shift+page_up=move_tab:-1
-keybind = ctrl+shift+page_down=move_tab:1
+# alt+page_up/down: previous/next herdr workspace (alt+shift+k / alt+shift+j)
+keybind = alt+page_up=text:\x1bK
+keybind = alt+page_down=text:\x1bJ
 
-# Split pane navigation with Alt + arrow keys
-keybind = alt+left=goto_split:left
-keybind = alt+right=goto_split:right
-keybind = alt+up=goto_split:up
-keybind = alt+down=goto_split:down
+# ctrl+physical digit row: herdr workspace 1..9 (CSI u ctrl+1..9)
+keybind = ctrl+physical:one=text:\x1b[49;5u
+keybind = ctrl+physical:two=text:\x1b[50;5u
+keybind = ctrl+physical:three=text:\x1b[51;5u
+keybind = ctrl+physical:four=text:\x1b[52;5u
+keybind = ctrl+physical:five=text:\x1b[53;5u
+keybind = ctrl+physical:six=text:\x1b[54;5u
+keybind = ctrl+physical:seven=text:\x1b[55;5u
+keybind = ctrl+physical:eight=text:\x1b[56;5u
+keybind = ctrl+physical:nine=text:\x1b[57;5u
+keybind = ctrl+shift+t=unbind
+keybind = ctrl+tab=unbind
+keybind = ctrl+shift+tab=unbind
+
+# Free alt+1..9 for herdr tab jumps (default goto_tab / last_tab)
+keybind = alt+1=unbind
+keybind = alt+2=unbind
+keybind = alt+3=unbind
+keybind = alt+4=unbind
+keybind = alt+5=unbind
+keybind = alt+6=unbind
+keybind = alt+7=unbind
+keybind = alt+8=unbind
+keybind = alt+9=unbind
+
+# AZERTY: physical digit row sends alt+1..9 (ESC N) to herdr
+keybind = alt+physical:one=text:\x1b1
+keybind = alt+physical:two=text:\x1b2
+keybind = alt+physical:three=text:\x1b3
+keybind = alt+physical:four=text:\x1b4
+keybind = alt+physical:five=text:\x1b5
+keybind = alt+physical:six=text:\x1b6
+keybind = alt+physical:seven=text:\x1b7
+keybind = alt+physical:eight=text:\x1b8
+keybind = alt+physical:nine=text:\x1b9
 
 # Cells and blocks
 adjust-box-thickness = 100%

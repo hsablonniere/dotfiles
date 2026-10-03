@@ -72,6 +72,10 @@ Herdr is a terminal multiplexer for coding agents (tabs, splits and workspaces).
 
 > **Note:** `~/.config/herdr/` also holds runtime files (sockets, logs, `session.json`), so stow links only `config.toml`.
 
+Tab, split, pane and workspace shortcuts live in herdr (`[keys]`), not in Ghostty, so Ghostty unbinds the matching defaults.
+Herdr does not accept the Page keys or digit keys on AZERTY, so Ghostty remaps them to chords herdr understands
+(e.g. `alt+physical:one` sends `ESC 1`, `ctrl+page_down` sends `ESC N`). Avoid `ESC P` (DCS introducer).
+
 ### [Neovim](https://neovim.io/)
 
 A hyperextensible Vim-based text editor.

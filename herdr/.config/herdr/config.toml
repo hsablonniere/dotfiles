@@ -8,3 +8,21 @@ enabled = false
 
 [ui.toast]
 delivery = "herdr"
+
+[keys]
+switch_tab = "alt+1..9"
+split_vertical = "alt+q"
+split_horizontal = "alt+shift+q"
+focus_pane_left = "alt+left"
+focus_pane_down = "alt+down"
+focus_pane_up = "alt+up"
+focus_pane_right = "alt+right"
+new_tab = "ctrl+shift+t"
+next_tab = ["ctrl+tab", "alt+shift+n"]
+previous_tab = ["ctrl+shift+tab", "alt+shift+b"]
+move_tab_previous = "alt+shift+h"
+move_tab_next = "alt+shift+l"
+next_workspace = "alt+shift+j"
+previous_workspace = "alt+shift+k"
+switch_workspace = "ctrl+1..9"
+zoom = "alt+z"
