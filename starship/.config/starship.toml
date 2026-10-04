@@ -98,6 +98,7 @@ detect_files = ['package.json', '.mise.toml', '.tool-versions']
 format = "$symbol"
 command = "echo ''"
 when = "op whoami 2>/dev/null"
+ignore_timeout = true
 symbol = "\uf4fc "
 
 [fill]
