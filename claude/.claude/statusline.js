@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 
 const fs = require('node:fs');
-const path = require('node:path');
-const { execSync, spawn } = require('node:child_process');
+const { execSync } = require('node:child_process');
 
 const CLAUDE_DUMB_ZONE = 59;
 const QUOTA_CACHE_FILE = '/tmp/claude-quota-cache.json';
-const QUOTA_CACHE_TTL = 5 * 60 * 1000;
+const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
 function getGitBranch() {
   try {
@@ -25,27 +24,26 @@ function ansi(text, bgColor, color = 'rgb(255, 255, 255)') {
   return `${RESET}${bgColorAnsi}${colorAnsi}${text}${RESET}`;
 }
 
-function readQuotaCache() {
-  try {
-    if (!fs.existsSync(QUOTA_CACHE_FILE)) return null;
-    const stat = fs.statSync(QUOTA_CACHE_FILE);
-    if (Date.now() - stat.mtime.getTime() > QUOTA_CACHE_TTL * 2) return null;
-    return JSON.parse(fs.readFileSync(QUOTA_CACHE_FILE, 'utf-8'));
-  } catch {
-    return null;
-  }
+/**
+ * Extracts quotas from the stdin `rate_limits` payload (epoch seconds -> ISO strings).
+ * Returns null when the payload has no usable data.
+ */
+function parseRateLimits(rateLimits) {
+  const five = rateLimits?.five_hour;
+  const seven = rateLimits?.seven_day;
+  if (typeof five?.used_percentage !== 'number' || typeof seven?.used_percentage !== 'number') return null;
+  return {
+    session: { quota: five.used_percentage, resetsAt: new Date(five.resets_at * 1000).toISOString() },
+    weekly: { quota: seven.used_percentage, resetsAt: new Date(seven.resets_at * 1000).toISOString() },
+  };
 }
 
-function refreshQuotaCacheIfNeeded() {
+// Persisted for claude-quota.js, which only reads this file.
+function writeQuotaCache(quota) {
   try {
-    const needsRefresh = !fs.existsSync(QUOTA_CACHE_FILE) ||
-      (Date.now() - fs.statSync(QUOTA_CACHE_FILE).mtime.getTime()) > QUOTA_CACHE_TTL;
-    if (needsRefresh) {
-      const quotaPath = path.join(__dirname, 'claude-quota.js');
-      spawn('node', [quotaPath], { detached: true, stdio: 'ignore' });
-    }
+    fs.writeFileSync(QUOTA_CACHE_FILE, JSON.stringify({ fetchedAt: new Date().toISOString(), ...quota }, null, 2));
   } catch {
-    // Silently ignore background refresh errors
+    // Cache is best effort
   }
 }
 
@@ -141,9 +139,11 @@ try {
     claudeBgColor = isDumbZone ? 'rgb(226, 0, 0)' : 'rgb(217, 119, 87)';
     claudeColor = isDumbZone ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 0)';
 
-    // Add quota info if available
-    const quotaData = readQuotaCache();
-    if (quotaData?.session && quotaData?.weekly) {
+    // Add quota info if the payload provides it
+    const quotaData = parseRateLimits(input.rate_limits);
+    if (quotaData) {
+      writeQuotaCache(quotaData);
+
       const sessPercent = quotaData.session.quota;
       const sessResetDate = new Date(quotaData.session.resetsAt);
       const sessTime = sessResetDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
@@ -151,7 +151,7 @@ try {
 
       const weekPercent = quotaData.weekly.quota;
       const resetDate = new Date(quotaData.weekly.resetsAt);
-      const idealPercent = quotaData.weekly.idealPercent ?? Math.round(((7 * 24 * 60 * 60 * 1000 - Math.max(0, resetDate.getTime() - Date.now())) / (7 * 24 * 60 * 60 * 1000)) * 100);
+      const idealPercent = Math.round(((SEVEN_DAYS_MS - Math.max(0, resetDate.getTime() - Date.now())) / SEVEN_DAYS_MS) * 100);
       const dayName = resetDate.toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 2);
       const time = resetDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
       claudeText += ` 󱨲 ${weekPercent}%/${idealPercent}% ${dayName} ${time}`;
@@ -159,8 +159,6 @@ try {
 
     sections.push({ text: claudeText, bgColor: claudeBgColor, color: claudeColor });
   }
-
-  refreshQuotaCacheIfNeeded();
 
   console.log(formatSections(sections));
 } catch (error) {

@@ -23,8 +23,8 @@ Claude Code is Anthropic's official CLI tool for Claude.
 **Config location:** `.claude/`
 
 - `settings.json` - CLI settings and preferences
-- `statusline.js` - Custom statusline configuration
-- `claude-quota.js` - Fetches and caches the session and weekly usage quotas
+- `statusline.js` - Custom statusline configuration (caches the `rate_limits` quotas received from Claude Code)
+- `claude-quota.js` - Reads the quota cache written by the statusline and prints it with its age (`--json` available)
 - `hooks/` - Hook scripts (`speak.sh`: text-to-speech, toggled by `~/.local/state/speak-enabled`)
 - `output-styles/` - Custom output styles (`minimaliste.md`)
 
