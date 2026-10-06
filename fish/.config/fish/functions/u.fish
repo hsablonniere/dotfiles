@@ -1,12 +1,37 @@
-function u --description "Update system (yay), mise tools, flatpaks"
-    __u_step "Updating system packages (yay)"
-    yay -Syu --noconfirm; or return
+function u --description "Run the update hooks from ~/.config/update-hooks"
+    set -l hooks_dir ~/.config/update-hooks
+    set -l failed
 
-    __u_step "Updating mise tools"
-    mise -C ~ upgrade
+    if not test -d $hooks_dir
+        echo "No hooks directory: $hooks_dir" >&2
+        return 1
+    end
 
-    __u_step "Updating flatpaks"
-    flatpak update -y
+    for hook in $hooks_dir/*
+        test -x $hook; or continue
+
+        # Title is the file name without its numeric prefix (10-yay -> yay)
+        set -l name (string replace -r '^\d+-' '' (path basename $hook))
+        __u_step "Updating $name"
+
+        $hook
+        set -l hook_status $status
+
+        # Ctrl+C in the middle of a hook stops everything
+        if test $hook_status -eq 130
+            return 130
+        else if test $hook_status -ne 0
+            set -a failed $name
+        end
+    end
+
+    if set -q failed[1]
+        echo ""
+        set_color red
+        echo "Failed: $failed"
+        set_color normal
+        return 1
+    end
 end
 
 function __u_step --description "Print a highlighted section header for u"

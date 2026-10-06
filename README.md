@@ -48,6 +48,16 @@ Fish is a user-friendly shell with powerful command-line completions and syntax 
   - Git-related shortcuts (`ga`, `gabs`, `grbim`, `gfom`, etc.)
   - Utility functions (`c`, `cc`, `cert`, `copy`, `cr`, `ex` and many more)
 
+**Update hooks:** `.config/update-hooks/`
+
+The `u` function runs every executable in this directory in alphabetical order.
+The title shown for each hook is its file name without the numeric prefix (`10-yay` shows "Updating yay").
+A failing hook does not stop the others; `u` lists the failures at the end and returns 1.
+
+- `10-yay` - System packages
+- `20-mise` - mise tools
+- `30-flatpak` - Flatpaks
+
 > **Note:** Some configuration details are stored in `~/.config/fish/conf.d/private_config.fish` for privacy. Same for some private functions in `~/.config/fish/functions/*`.
 
 ### [Ghostty](https://ghostty.org/)
