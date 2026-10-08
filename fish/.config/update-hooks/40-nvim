@@ -1,0 +1,2 @@
+#!/usr/bin/env fish
+nvim --headless -c "lua vim.pack.update(nil, { force = true })" -c "qa"
