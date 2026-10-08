@@ -83,11 +83,6 @@ to the buffer. Imports and local variables show too (no finer filtering).
 | `/` | Fuzzy filter the symbols |
 | `q` | Close |
 
-## Git (gtui)
-
-`Alt+V` opens gtui, my git TUI, in a floating terminal at the git root of the current file.
-Quitting gtui closes the window, then files changed by git operations are reloaded.
-
 ## Code intelligence (LSP)
 
 Native Neovim defaults, available when a language server is attached to the buffer (its name
