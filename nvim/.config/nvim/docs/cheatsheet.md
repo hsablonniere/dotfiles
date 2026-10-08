@@ -48,8 +48,8 @@ otherwise.
 
 ## File explorer (neo-tree)
 
-`Space e` opens the file tree in a centered floating window, unfolded down to the current file.
-Opening a file closes it, `Esc` or `q` too. Git-ignored files and `.git` are hidden.
+`Alt+A` opens the file tree in a sidebar on the right, unfolded down to the current file.
+`q` closes it. Git-ignored files and `.git` are hidden.
 
 | Keys (in the explorer) | Action |
 |---|---|
@@ -72,16 +72,16 @@ Opening a file closes it, `Esc` or `q` too. Git-ignored files and `.git` are hid
 
 ## Outline (neo-tree)
 
-`Space o` opens the structure of the current file (language server symbols) in
-the same floating window as the file explorer, fully unfolded. Needs a language server attached
+`Alt+Shift+A` opens the structure of the current file (language server symbols) in
+a sidebar on the left, fully unfolded. Needs a language server attached
 to the buffer. Imports and local variables show too (no finer filtering).
 
 | Keys (in the outline) | Action |
 |---|---|
-| `Enter` / `o` | Jump to the symbol and close the outline |
+| `Enter` / `o` | Jump to the symbol |
 | `→` / `←` | Same tree navigation as the file explorer |
 | `/` | Fuzzy filter the symbols |
-| `Esc` / `q` | Close |
+| `q` | Close |
 
 ## Git (gtui)
 
@@ -331,11 +331,12 @@ replaces everywhere with a live preview (add `c` to confirm each one).
 
 ## Open files (buffers)
 
-Every opened file stays open in the background. The tabline at the top lists them aligned
-on the left: the current file in a blue pill, the others faded. Each one shows the path inside
-the project (relative to the git root) with the file name in bold, `+` when modified, `RO` when
-read-only. When they do not fit, the longest paths are shortened fish style from the left
-(`s/c/app.js`). Tabs never move when switching file. A click switches file.
+Every opened file stays open in the background, the list is not displayed: use `Space s b` to
+pick one. The tabline at the top shows the project name (blue block) and the active branch (green arrow), like the starship
+prompt. Each split holding a file has a bar on top with its file: file name in blue in the focused
+split, faded in the others. It shows the path inside the project (relative to the git root) with the file name in
+bold, preceded by its file icon, `+` when modified, `RO` when read-only. Long paths are shortened fish style from the left
+(`s/c/app.js`).
 
 | Keys | Action |
 |---|---|
@@ -378,7 +379,7 @@ after `Space w` to see them all in the menu.
 
 ## Reading the screen
 
-Tabline (top): open files, the current one in a blue pill, see [Open files](#open-files-buffers).
+Tabline (top): project name and active branch. Bar of each split: its file, see [Open files](#open-files-buffers).
 
 Indentation guides mark each level, the scope under the cursor is highlighted. Notifications
 (LSP, formatters, plugins) pop up in the top right corner and fade out,

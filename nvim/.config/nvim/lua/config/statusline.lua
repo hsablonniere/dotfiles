@@ -15,7 +15,11 @@
 local function statusline_highlights()
   local function fg(name) return vim.api.nvim_get_hl(0, { name = name, link = false }).fg end
   local statusline = vim.api.nvim_get_hl(0, { name = 'StatusLine', link = false })
-  local bg = statusline.bg
+  -- Black, like the tabline: the statusline and the command line row under it
+  local bg = 0
+  vim.api.nvim_set_hl(0, 'StatusLine', { fg = statusline.fg, bg = bg })
+  vim.api.nvim_set_hl(0, 'StatusLineNC', { fg = statusline.fg, bg = bg })
+  vim.api.nvim_set_hl(0, 'MsgArea', { bg = bg })
   local dark = vim.api.nvim_get_hl(0, { name = 'Normal', link = false }).bg
 
   -- Secondary text: statusline foreground faded toward its background. Themes usually pick
@@ -28,19 +32,14 @@ local function statusline_highlights()
     end
     return out
   end
-  local faded = blend(bg, statusline.fg, 0.8)
+  local faded = blend(statusline.bg, statusline.fg, 0.8)
 
-  -- Tabline: the file name in bold. The current file in a pill colored like the normal mode, its
-  -- rounded ends drawn in the pill color on the tabline background. The others faded, no pill.
-  local function pill(name, fill, text)
-    vim.api.nvim_set_hl(0, name, { fg = text, bg = fill, bold = true })
-    vim.api.nvim_set_hl(0, name .. 'Dir', { fg = text, bg = fill })
-    vim.api.nvim_set_hl(0, name .. 'Cap', { fg = fill, bg = bg })
-  end
-  pill('SlTabCurrent', fg('Function'), dark)
-  pill('SlTabName', bg, faded)
-  vim.api.nvim_set_hl(0, 'SlTabOther', { fg = faded, bg = bg })
-  vim.api.nvim_set_hl(0, 'TabLineFill', { bg = bg })
+  -- Winbars, editor background: faded file of the unfocused splits (the focused one is TlFile,
+  -- see tabline.lua)
+  vim.api.nvim_set_hl(0, 'SlTabName', { fg = faded, bg = dark, bold = true })
+  vim.api.nvim_set_hl(0, 'SlTabNameDir', { fg = faded, bg = dark })
+  vim.api.nvim_set_hl(0, 'WinBar', { bg = dark })
+  vim.api.nvim_set_hl(0, 'WinBarNC', { bg = dark })
 
   vim.api.nvim_set_hl(0, 'SlHash', { fg = faded, bg = bg })
   vim.api.nvim_set_hl(0, 'SlLsp', { fg = faded, bg = bg })

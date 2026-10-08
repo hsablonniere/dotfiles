@@ -6,10 +6,10 @@ require('mini.icons').setup()
 require('mini.icons').mock_nvim_web_devicons()
 
 -- [[ File explorer and outline ]]
--- neo-tree in a centered floating window, closed by Esc or q, ? lists its keys:
--- - <leader>e: file tree opened on the current file, opening a file closes it (a add, d delete,
---   r rename, c copy, m move...)
--- - <leader>o: outline of the current file (language server symbols)
+-- neo-tree in a sidebar, closed by q, ? lists its keys:
+-- - <M-a>: file tree on the right, opened on the current file (a add, d delete, r rename, c copy,
+--   m move...)
+-- - <M-A> (Alt+Shift+a): outline of the current file on the left (language server symbols)
 vim.pack.add({
   { src = 'https://github.com/nvim-neo-tree/neo-tree.nvim', version = vim.version.range('3') },
   -- Required by neo-tree
@@ -48,8 +48,8 @@ require('neo-tree').setup({
   -- Keep the cursor on the first letter of the file name
   enable_cursor_hijack = true,
   window = {
-    position = 'float',
-    popup = { size = { width = 60, height = '80%' } },
+    position = 'right',
+    width = 40,
     mappings = { ['<Right>'] = tree_right, ['<Left>'] = tree_left },
   },
   filesystem = {
@@ -90,17 +90,22 @@ require('neo-tree').setup({
     created = { enabled = false },
   },
 })
-vim.keymap.set('n', '<leader>e', '<cmd>Neotree float reveal toggle<cr>', { desc = 'File [E]xplorer' })
--- Outline of the current file (LSP symbols), in the same window
-vim.keymap.set('n', '<leader>o', '<cmd>Neotree float document_symbols toggle<cr>', { desc = '[O]utline' })
+vim.keymap.set({ 'n', 'i', 'v' }, '<M-a>', '<cmd>Neotree right reveal toggle<cr>', { desc = 'File explorer' })
+-- Outline of the current file (LSP symbols), on the left
+vim.keymap.set({ 'n', 'i', 'v' }, '<M-A>', '<cmd>Neotree left document_symbols toggle<cr>', { desc = 'Outline' })
 
--- The inside of the window uses the editor background, give the border and its title the same
--- one so only the line shows (the theme gives them the floating windows background)
+-- The inside of the windows uses the editor background, give the border, its title and the
+-- sidebar separators the same one so only the line shows (the theme gives them other backgrounds)
 local function explorer_border_highlights()
   local function fg(name) return vim.api.nvim_get_hl(0, { name = name, link = false }).fg end
   local bg = vim.api.nvim_get_hl(0, { name = 'Normal', link = false }).bg
   vim.api.nvim_set_hl(0, 'NeoTreeFloatBorder', { fg = fg('FloatBorder'), bg = bg })
   vim.api.nvim_set_hl(0, 'NeoTreeFloatTitle', { fg = fg('FloatTitle'), bg = bg })
+  -- Sidebars: same background focused or not, same separator line on both sides
+  vim.api.nvim_set_hl(0, 'NeoTreeNormal', { bg = bg })
+  vim.api.nvim_set_hl(0, 'NeoTreeNormalNC', { bg = bg })
+  vim.api.nvim_set_hl(0, 'NeoTreeWinSeparator', { fg = fg('WinSeparator'), bg = bg })
+  vim.api.nvim_set_hl(0, 'NeoTreeVertSplit', { fg = fg('WinSeparator'), bg = bg })
 end
 explorer_border_highlights()
 -- Delayed so it runs after neo-tree redefines its own highlights, which it does asynchronously
