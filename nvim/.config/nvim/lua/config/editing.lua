@@ -76,6 +76,8 @@ vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Go to the upper window' })
 vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Go to the right window' })
 -- Ctrl+L used to clear the search highlight, Esc does it now
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<cr>', { desc = 'Clear search highlight' })
+vim.keymap.set('n', '<C-S-c>', 'gcc', { remap = true, desc = 'Comment line' })
+vim.keymap.set('x', '<C-S-c>', 'gc', { remap = true, desc = 'Comment selection' })
 
 -- Surround: add, delete or replace brackets, quotes, tags... around text. sa + motion (or on a
 -- selection) + character adds (saiw) wraps a word in parentheses), sd( deletes, sr"' replaces.

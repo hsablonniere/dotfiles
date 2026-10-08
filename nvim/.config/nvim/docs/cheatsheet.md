@@ -239,8 +239,8 @@ Replaces `Alt+'` (GotoLine). Native, no plugin.
 | `Alt+Shift+↑` / `Alt+Shift+↓` | Move the line or the selection up / down (normal, visual, insert mode) |
 | `Alt+Shift+←` / `Alt+Shift+→` | Decrease / increase the indentation of the line or the selection |
 | `Space f` | Format the file, or the selection in visual mode |
-| `gcc` | Comment / uncomment the line (like WebStorm's `Ctrl+/`) |
-| `gc` (visual mode) | Comment / uncomment the selection |
+| `gcc` or `Ctrl+Shift+C` | Comment / uncomment the line (like WebStorm's `Ctrl+/`) |
+| `gc` or `Ctrl+Shift+C` (visual mode) | Comment / uncomment the selection |
 | `gc` + motion | Comment / uncomment a text object: `gcip` paragraph, `gc3j` 4 lines... |
 | `u` / `Ctrl+R` | Undo / redo |
 | `Space u` | Undo tree: every past state of the file, even undone branches, `Enter` to go back to one |
