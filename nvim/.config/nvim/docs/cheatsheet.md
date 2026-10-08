@@ -373,7 +373,11 @@ after `Space w` to see them all in the menu.
 
 ## Reading the screen
 
-Tabline (top): project name and active branch. Bar of each split: its file, see [Open files](#open-files-buffers).
+Tabline (top): project name and git block (branch, hash, status). Bar of each split: file path and current symbol, see [Open files](#open-files-buffers).
+
+There is no line at the bottom (noice): `:` and `/` open a small popup at the top of the screen,
+messages (errors, "written", command output) show as notifications, long output (`:messages`)
+opens in a split.
 
 Indentation guides mark each level, the scope under the cursor is highlighted. Notifications
 (LSP, formatters, plugins) pop up in the top right corner and fade out,

@@ -59,6 +59,11 @@
       "src": "https://github.com/nvim-neo-tree/neo-tree.nvim",
       "version": "3.0.0 - 4.0.0"
     },
+    "noice.nvim": {
+      "rev": "cf758e9df66451889aab56613a21b8673f045ec2",
+      "src": "https://github.com/folke/noice.nvim",
+      "version": "4.0.0 - 5.0.0"
+    },
     "nui.nvim": {
       "rev": "10fc361835c856ba4233ef5ea135b919bf3dce97",
       "src": "https://github.com/MunifTanjim/nui.nvim"
