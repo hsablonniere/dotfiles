@@ -327,11 +327,10 @@ replaces everywhere with a live preview (add `c` to confirm each one).
 ## Open files (buffers)
 
 Every opened file stays open in the background, the list is not displayed: use `Space s b` to
-pick one. The tabline at the top shows the project name (blue block) and the active branch (green arrow), like the starship
-prompt. Each split holding a file has a bar on top with its file: file name in blue in the focused
-split, faded in the others. It shows the path inside the project (relative to the git root) with the file name in
-bold, preceded by its file icon, `+` when modified, `RO` when read-only. Long paths are shortened fish style from the left
-(`s/c/app.js`).
+pick one. The tabline at the top shows the project name (blue block) and the git block (green arrow: branch,
+short hash, status counts), like the starship prompt. Each split holding a file has a bar on top (dropbar): the path
+of the file inside the project, then the symbols around the cursor (class > method, from the
+language server or treesitter).
 
 | Keys | Action |
 |---|---|
