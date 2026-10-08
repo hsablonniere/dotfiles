@@ -1,8 +1,10 @@
 -- [[ Options ]]
--- One global statusline at the bottom instead of one per window (saves width on a narrow screen)
-vim.o.laststatus = 3
--- The mode is already shown in the statusline
+-- No statusline, its info (mode, diagnostics, position...) is at the right of the tabline
+vim.o.laststatus = 0
+-- The mode and the position are already shown in the tabline. Without a statusline, nvim would
+-- draw the position (ruler) at the right of the command line
 vim.o.showmode = false
+vim.o.ruler = false
 
 vim.o.number = true
 -- Hybrid numbers: real number on the cursor line, distance to the cursor elsewhere (for 5j, 3dk...).

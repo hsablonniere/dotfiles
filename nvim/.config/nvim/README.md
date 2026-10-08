@@ -6,7 +6,7 @@ readable, with habits carried over from WebStorm.
 ## Structure
 
 - `init.lua` - Entry point, loads the modules in order
-- `lua/config/` - One module per topic (options, picker, LSP, completion, statusline...)
+- `lua/config/` - One module per topic (options, picker, LSP, completion, status info...)
 - `snippets/` - My own snippets, in VS Code format
 - `docs/cheatsheet.md` - Keymaps and habits, especially the ones replacing WebStorm
 - `docs/snippets.md` - Reference of the ready-made snippets

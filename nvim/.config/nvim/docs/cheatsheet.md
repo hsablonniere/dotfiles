@@ -86,7 +86,7 @@ to the buffer. Imports and local variables show too (no finer filtering).
 ## Code intelligence (LSP)
 
 Native Neovim defaults, available when a language server is attached to the buffer (its name
-shows in the statusline, e.g. `luals`, `tsc`). All in normal mode, cursor on a symbol.
+shows at the right of the tabline, e.g. `luals`, `tsc`). All in normal mode, cursor on a symbol.
 
 | Keys | Action |
 |---|---|
@@ -107,7 +107,7 @@ shows in the statusline, e.g. `luals`, `tsc`). All in normal mode, cursor on a s
 
 Pickers jump directly when there is a single result.
 
-While a server is working (indexing a project...), its name in the statusline shows `…` or a
+While a server is working (indexing a project...), its name in the tabline shows `…` or a
 percentage, e.g. `tsc 45%`.
 
 Language servers are installed by mason (`:Mason` to see them), except `rust-analyzer`
@@ -380,27 +380,28 @@ Indentation guides mark each level, the scope under the cursor is highlighted. N
 (LSP, formatters, plugins) pop up in the top right corner and fade out,
 `:lua Snacks.notifier.show_history()` lists the past ones.
 
-Statusline (bottom), from left to right:
+Right of the tabline (top), after the dots, blocks with arrows like the starship prompt (blues getting darker
+toward the edge, the mode in its color at the very right), from left to right. There is no statusline
+at the bottom.
 
 ```
- N main a1b2c3d4 M3S1?2 +3~1-2          2e5w luals 42:7 37%
+ 2e5w 12 luals 42:7 37% N
 ```
 
 | Part | Meaning |
 |---|---|
+| `@q` | Recording a macro into register `q` (red, only while recording) |
+| `12` | Keys typed so far in a pending command (here `12` of `12j`), only while typing |
 | `N` | Mode: `N`ormal, `I`nsert, `V`isual, `L` visual line, `B` visual block, `R`eplace, `C`ommand, `T`erminal, `O`perator pending, `S`elect |
-| `@q` | Recording a macro into register `q` |
-| `main a1b2c3d4` | Branch and short commit hash |
-| `M3S1?2` | Repo status, same as the starship prompt (see below) |
-| `+3~1-2` | Lines added, changed, removed in the current file |
 | `2e5w` | Diagnostics in the current file: errors, warnings, info, hints |
 | `luals` | Language servers attached to the current file |
 | `42:7 37%` | Line, column, position in the file |
 
-When the screen is too narrow, parts are hidden in this order: percentage, hash, language
-servers, file diff.
+When the screen is too narrow, parts are hidden in this order: percentage, pending keys,
+language servers.
 
-Repo status symbols (counts are files, not lines):
+Git block of the tabline (branch, short commit hash, then status like `M3S1?2`), same as the
+starship prompt. Status symbols (counts are files, not lines):
 
 | Symbol | Meaning |
 |---|---|

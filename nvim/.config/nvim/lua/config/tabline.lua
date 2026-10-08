@@ -1,130 +1,163 @@
--- [[ Tabline and winbars ]]
--- Like WebStorm's title bar and editor tabs:
--- - tabline (top, always shown): project name (git root of the current file, else the working
---   directory) in a blue block, then the active branch in a green arrow, like the starship prompt
--- - winbar (top of each split holding a file): the file shown in that split, its path inside the
---   project (relative to the git root, to home outside a repo) after the file icon, with the file
---   name in bold, "+" when modified, "RO" when read-only. The focused split has the name in
---   color, the others faded text.
---   Long paths are shortened fish style from the left (src/components/app.js -> s/c/app.js), then
---   the file name loses its start ("…mponent.js").
--- The list of open files is not displayed, see the picker (<leader>sb) and Tab / Shift+Tab.
-
-local function buffer_flags(buf)
-  local flags = ''
-  if vim.bo[buf].modified then flags = flags .. ' +' end
-  if vim.bo[buf].readonly or not vim.bo[buf].modifiable then flags = flags .. ' RO' end
-  return flags
-end
-
--- Git root per file name (false outside a repo), looked up once instead of on every redraw
-local git_roots = {}
-
--- Path of a buffer inside its project, split on "/"
-local function path_parts(buf)
-  local name = vim.api.nvim_buf_get_name(buf)
-  if git_roots[name] == nil then git_roots[name] = vim.fs.root(buf, '.git') or false end
-  local root = git_roots[name]
-  local path = root and vim.fs.relpath(root, name) or vim.fn.fnamemodify(name, ':~')
-  return vim.split(path, '/', { plain = true })
-end
-
--- Directory and file name fitting in `room` columns
-local function fit_path(parts, room)
-  local width = function() return vim.api.nvim_strwidth(table.concat(parts, '/')) end
-  for i = 1, #parts - 1 do
-    if width() <= room then break end
-    -- Keep the leading dot of hidden directories, like fish: .config -> .c
-    parts[i] = vim.fn.strcharpart(parts[i], 0, parts[i]:sub(1, 1) == '.' and 2 or 1)
-  end
-  local name = table.remove(parts)
-  local dir = #parts > 0 and table.concat(parts, '/') .. '/' or ''
-  local dir_width = vim.api.nvim_strwidth(dir)
-  if dir_width + vim.api.nvim_strwidth(name) > room then
-    -- Drop the directory, then the start of the name
-    dir, dir_width = '', 0
-    local full, keep = name, vim.fn.strchars(name)
-    while keep > 0 and vim.api.nvim_strwidth(name) > room do
-      keep = keep - 1
-      name = '…' .. vim.fn.strcharpart(full, vim.fn.strchars(full) - keep)
-    end
-    if vim.api.nvim_strwidth(name) > room then name = '' end
-  end
-  return dir, name
-end
+-- [[ Tabline ]]
+-- Like WebStorm's title bar (the file bar of each split is in winbar.lua): project name (git
+-- root of the current file, else the working directory) in a blue block, then the git
+-- block (branch, short hash, status counts) in green, like the starship prompt. The list of
+-- open files is not displayed, see the picker (<leader>sb) and Tab / Shift+Tab.
 
 local function escape(text) return (text:gsub('%%', '%%%%')) end
 
--- Same blocks and colors as the starship prompt (starship.toml): blue project, green branch,
--- arrow-shaped ends, no rounded start. The text is white and the rest of the line black.
+-- Same blocks and colors as the starship prompt (starship.toml): blue project, green git,
+-- arrow-shaped ends, no rounded start. The text is white.
 local function define_highlights()
-  local normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
   local black = '#000000'
+  local project, branch, text = '#3456a4', '#466b3e', '#ffffff'
   local function set(name, opts) vim.api.nvim_set_hl(0, name, opts) end
-  set('TlProject', { fg = '#ffffff', bg = '#3456a4', bold = true })
-  set('TlProjectArrow', { fg = '#3456a4', bg = '#466b3e' })
-  set('TlBranch', { fg = '#ffffff', bg = '#466b3e' })
-  set('TlProjectEnd', { fg = '#3456a4', bg = black })
-  set('TlBranchArrow', { fg = '#466b3e', bg = black })
-  -- Winbar: in the focused split the file name in the theme's function color and the directory in
-  -- normal text, the others faded (SlTabName)
-  local function fg(name) return vim.api.nvim_get_hl(0, { name = name, link = false }).fg end
-  set('TlFile', { fg = fg('Function'), bg = normal.bg, bold = true })
-  set('TlFileDir', { fg = normal.fg, bg = normal.bg })
+  set('TlProject', { fg = text, bg = project, bold = true })
+  set('TlProjectArrow', { fg = project, bg = branch })
+  set('TlBranch', { fg = text, bg = branch })
+  set('TlProjectEnd', { fg = project, bg = black })
+  set('TlBranchArrow', { fg = branch, bg = black })
+  -- Dotted line filling the rest, like starship's fill
+  set('TlFill', { fg = '#333333', bg = black })
   -- Rest of the tabline line
   set('TabLineFill', { bg = black })
 end
 define_highlights()
 vim.api.nvim_create_autocmd('ColorScheme', { callback = define_highlights })
 
+-- Repo status, starship style. `git status` runs asynchronously and the result is cached
+-- per directory, so the tabline itself never waits on git.
+local git_cache = {} -- dir -> { branch, hash, status } or false when not a repo
+local git_running = {} -- dir -> true while running, 'again' if a refresh was requested meanwhile
+-- dir -> true when its cached status is up to date. Cleared for every directory by events that
+-- may change a repo, since several cached directories can belong to the same repo.
+local git_fresh = {}
+
+local function git_parse(output)
+  local result = { branch = '', hash = '', status = '' }
+  local count = { u = 0, D = 0, R = 0, M = 0, S = 0, ['?'] = 0 }
+  local ahead, behind = 0, 0
+
+  for line in vim.gsplit(output, '\n', { plain = true, trimempty = true }) do
+    local key, value = line:match('^# branch%.(%S+) (.*)$')
+    if key == 'oid' and value ~= '(initial)' then
+      result.hash = value:sub(1, 8)
+    elseif key == 'head' and value ~= '(detached)' then
+      result.branch = value
+    elseif key == 'ab' then
+      local a, b = value:match('^%+(%d+) %-(%d+)$')
+      ahead, behind = tonumber(a) or 0, tonumber(b) or 0
+    else
+      -- Porcelain v2 entries: "1"/"2" changed/renamed (XY = index/worktree), "u" unmerged, "?" untracked
+      local kind = line:sub(1, 1)
+      if kind == '?' then
+        count['?'] = count['?'] + 1
+      elseif kind == 'u' then
+        count.u = count.u + 1
+      elseif kind == '1' or kind == '2' then
+        local x, y = line:sub(3, 3), line:sub(4, 4)
+        if x == 'D' or y == 'D' then count.D = count.D + 1 end
+        if x == 'R' then count.R = count.R + 1 end
+        if y == 'M' then count.M = count.M + 1 end
+        if x ~= '.' then count.S = count.S + 1 end
+      end
+    end
+  end
+
+  -- Same order and symbols as starship's $all_status$ahead_behind
+  local parts = {}
+  local symbols = { { 'u', '\u{f071}' }, { 'D', 'D' }, { 'R', 'R' }, { 'M', 'M' }, { 'S', 'S' }, { '?', '?' } }
+  for _, symbol in ipairs(symbols) do
+    local n = count[symbol[1]]
+    if n > 0 then table.insert(parts, symbol[2] .. n) end
+  end
+  if ahead > 0 and behind > 0 then
+    table.insert(parts, behind .. '\u{eb6f}\u{eb70}' .. ahead)
+  elseif ahead > 0 then
+    table.insert(parts, '\u{eb70}' .. ahead)
+  elseif behind > 0 then
+    table.insert(parts, behind .. '\u{eb6f}')
+  end
+  result.status = table.concat(parts)
+
+  return result
+end
+
+-- `if_stale`: only run git when the cached status of this directory is not up to date
+local function git_refresh(buf, if_stale)
+  if vim.bo[buf].buftype ~= '' then return end
+  local name = vim.api.nvim_buf_get_name(buf)
+  local dir = name ~= '' and vim.fs.dirname(name) or vim.fn.getcwd()
+  if vim.fn.isdirectory(dir) == 0 then return end
+  vim.b[buf].tabline_git_dir = dir
+  if if_stale and git_fresh[dir] then return end
+
+  if git_running[dir] then
+    git_running[dir] = 'again'
+    return
+  end
+  git_running[dir] = true
+
+  vim.system(
+    -- Untracked files are listed one by one (not collapsed into their directory), like starship counts them
+    { 'git', 'status', '--porcelain=v2', '--branch', '--untracked-files=all' },
+    -- Avoid taking the index lock, so a concurrent git command in a terminal never fails because of us
+    { cwd = dir, text = true, env = { GIT_OPTIONAL_LOCKS = '0' } },
+    vim.schedule_wrap(function(res)
+      git_cache[dir] = res.code == 0 and git_parse(res.stdout) or false
+      git_fresh[dir] = true
+      local again = git_running[dir] == 'again'
+      git_running[dir] = nil
+      vim.cmd.redrawtabline()
+      if again and vim.api.nvim_buf_is_valid(buf) then git_refresh(buf) end
+    end)
+  )
+end
+
+-- Switching file reuses the cached status of its directory while it is up to date. Events that may
+-- change a repo mark every directory stale and refresh the current file. In a terminal (gtui...),
+-- the refresh happens when entering the next file.
+vim.api.nvim_create_autocmd('BufEnter', {
+  callback = function(args) git_refresh(args.buf, true) end,
+})
+vim.api.nvim_create_autocmd({ 'BufWritePost', 'FocusGained', 'ShellCmdPost', 'TermLeave', 'TermClose' }, {
+  callback = function(args)
+    git_fresh = {}
+    git_refresh(args.buf)
+  end,
+})
+
 function _G.tabline()
   local buf = vim.api.nvim_get_current_buf()
   local name = vim.api.nvim_buf_get_name(buf)
   local root = (name ~= '' and vim.fs.root(buf, '.git')) or vim.fn.getcwd()
-  local out = { ('%%#TlProject# %s '):format(escape(vim.fs.basename(root))) }
-  local branch = vim.b[buf].gitsigns_head
-  if branch and branch ~= '' then
-    table.insert(out, ('%%#TlProjectArrow#\u{e0b0}%%#TlBranch# \u{e0a0} %s %%#TlBranchArrow#\u{e0b0}'):format(escape(branch)))
+  local project = ' ' .. vim.fs.basename(root) .. ' '
+  local out = { '%#TlProject#' .. escape(project) }
+  local used = vim.api.nvim_strwidth(project) + 1
+  -- Branch, short hash and status, same content as the starship git block
+  local git = git_cache[vim.b[buf].tabline_git_dir or '']
+  local content = {}
+  if git then
+    for _, part in ipairs({ git.branch, git.hash, git.status }) do
+      if part ~= '' then table.insert(content, part) end
+    end
+  end
+  if #content > 0 then
+    local text = ' ' .. table.concat(content, ' ') .. ' '
+    table.insert(out, '%#TlProjectArrow#\u{e0b0}%#TlBranch#' .. escape(text) .. '%#TlBranchArrow#\u{e0b0}')
+    used = used + vim.api.nvim_strwidth(text) + 1
   else
     table.insert(out, '%#TlProjectEnd#\u{e0b0}')
   end
+  -- Mode, diagnostics, LSP, position and percentage at the right (colored blocks), the dots fill
+  -- what is left, a space on each side
+  local info, info_width = _G.status_info(vim.o.columns - used - 4)
+  table.insert(out, '%#TlFill# ' .. ('·'):rep(math.max(0, vim.o.columns - used - info_width - 2)) .. ' ' .. info)
   return table.concat(out) .. '%#TabLineFill#'
-end
-
--- Nerd Font icon of the file in its own color, on the winbar background (mini.icons, see explorer.lua)
-local function file_icon(buf)
-  local icon, icon_hl = require('mini.icons').get('file', vim.api.nvim_buf_get_name(buf))
-  local group = 'TlIcon' .. icon_hl
-  vim.api.nvim_set_hl(0, group, {
-    fg = vim.api.nvim_get_hl(0, { name = icon_hl, link = false }).fg,
-    bg = vim.api.nvim_get_hl(0, { name = 'Normal', link = false }).bg,
-  })
-  return ('%%#%s# %s '):format(group, escape(icon))
-end
-
-function _G.winbar()
-  local win = vim.g.statusline_winid
-  local buf = vim.api.nvim_win_get_buf(win)
-  local focused = win == vim.api.nvim_get_current_win()
-  local parts, flags = path_parts(buf), buffer_flags(buf)
-  local dir, name = fit_path(parts, vim.api.nvim_win_get_width(win) - 4 - #flags)
-  local file, file_dir = focused and 'TlFile' or 'SlTabName', focused and 'TlFileDir' or 'SlTabNameDir'
-  return ('%s%%#%s#%s%%#%s#%s%%#WinBar#'):format(file_icon(buf), file_dir, escape(dir), file, escape(name .. flags))
 end
 
 vim.o.tabline = '%!v:lua.tabline()'
 vim.o.showtabline = 2
-
--- Winbar only on windows showing a file (not on the explorer, terminals, help...), set per window
--- as the same buffer can show up in a window without one
-vim.api.nvim_create_autocmd({ 'BufWinEnter', 'WinEnter' }, {
-  callback = function()
-    local win = vim.api.nvim_get_current_win()
-    if vim.api.nvim_win_get_config(win).relative ~= '' then return end
-    local file = vim.bo.buftype == '' and vim.api.nvim_buf_get_name(0) ~= ''
-    vim.wo[win].winbar = file and '%!v:lua.winbar()' or ''
-  end,
-})
 
 -- Next / previous buffer. Tab and Ctrl+I are the same key in most terminals, Ghostty tells them
 -- apart so Ctrl+I keeps jumping forward in the jump list.
