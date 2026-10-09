@@ -124,9 +124,9 @@ function _G.status_info(room)
   if #clients > 0 then block(table.concat(clients, ','), 'SlBlockLsp', BLOCK_COLORS.lsp, 3) end
 
   local line, last = vim.fn.line('.'), vim.fn.line('$')
-  -- Padded (line to 3 digits, column to 2, percentage to 3) so the blocks do not move while scrolling
-  block(('%3d:%-2d'):format(line, vim.fn.virtcol('.')), 'SlBlockPos', BLOCK_COLORS.pos)
-  block(('%3d%%'):format(math.floor(line / last * 100)), 'SlBlockPct', BLOCK_COLORS.pct, 1)
+  -- No padding: each block is as wide as its content
+  block(('%d:%d'):format(line, vim.fn.virtcol('.')), 'SlBlockPos', BLOCK_COLORS.pos)
+  block(('%d%%'):format(math.floor(line / last * 100)), 'SlBlockPct', BLOCK_COLORS.pct, 1)
 
   local mode = vim.api.nvim_get_mode().mode
   local letter = mode:sub(1, 2) == 'no' and 'O' or mode_letters[mode:sub(1, 1)] or 'N'
