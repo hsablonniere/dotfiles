@@ -1,10 +1,10 @@
 {
-  "lastChangelogVersion": "0.79.8",
-  "defaultProvider": "opencode",
-  "defaultModel": "big-pickle",
-  "quietStartup": true,
   "compaction": {
     "enabled": false
   },
+  "defaultModel": "big-pickle",
+  "defaultProvider": "opencode",
+  "lastChangelogVersion": "1.1.0",
+  "quietStartup": true,
   "theme": "dark"
 }
