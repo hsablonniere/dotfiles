@@ -7,5 +7,5 @@ for file in $(git diff --cached --name-only --diff-filter=ACM | grep 'settings\.
   tmp="$(mktemp)"
   jq -S . "$file" > "$tmp"
   mv "$tmp" "$file"
-  git add "$file"
+  git add -f "$file"
 done
