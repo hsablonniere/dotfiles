@@ -3,6 +3,7 @@ onboarding = false
 [ui]
 status_indicators = "symbols"
 prompt_new_tab_name = false
+sidebar_collapsed_mode = "hidden"
 
 [ui.sound]
 enabled = false
@@ -27,3 +28,4 @@ next_workspace = "alt+shift+j"
 previous_workspace = "alt+shift+k"
 switch_workspace = "ctrl+1..9"
 zoom = "alt+z"
+toggle_sidebar = "alt+s"
