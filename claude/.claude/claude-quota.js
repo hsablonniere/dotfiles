@@ -4,6 +4,7 @@ const fs = require('fs');
 
 // Written by statusline.js from the `rate_limits` payload sent by Claude Code.
 const CACHE_FILE = '/tmp/claude-quota-cache.json';
+const FIVE_HOURS = 5 * 60 * 60 * 1000;
 const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
 
 /** @typedef {Object} CacheData
@@ -74,12 +75,13 @@ function formatAge(ageSeconds) {
 }
 
 /**
- * @param {string} resetsAt - ISO date string for weekly quota reset
- * @returns {number} Ideal usage percentage based on elapsed time in the week
+ * @param {string} resetsAt - ISO date string for the quota reset
+ * @param {number} windowMs - Duration of the quota window in milliseconds
+ * @returns {number} Ideal usage percentage based on elapsed time in the window
  */
-function computeIdealPercent(resetsAt) {
+function computeIdealPercent(resetsAt, windowMs) {
   const timeRemaining = Math.max(0, new Date(resetsAt).getTime() - Date.now());
-  return Math.round(((SEVEN_DAYS - timeRemaining) / SEVEN_DAYS) * 100);
+  return Math.round(((windowMs - timeRemaining) / windowMs) * 100);
 }
 
 /**
@@ -100,9 +102,9 @@ function printHuman(data) {
   const fetchedTime = new Date(data.fetchedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
 
   console.log(`Data from ${fetchedTime} (${formatAge(getAgeSeconds(data))})\n`);
-  console.log(`Session quota: ${data.session.quota}% used`);
+  console.log(`Session quota: ${data.session.quota}% used (ideal: ${computeIdealPercent(data.session.resetsAt, FIVE_HOURS)}%)`);
   console.log(`Resets in ${sessionRemaining} at ${sessionTime.time}\n`);
-  console.log(`Weekly quota: ${data.weekly.quota}% used (ideal: ${computeIdealPercent(data.weekly.resetsAt)}%)`);
+  console.log(`Weekly quota: ${data.weekly.quota}% used (ideal: ${computeIdealPercent(data.weekly.resetsAt, SEVEN_DAYS)}%)`);
   console.log(`Resets at ${weeklyTime.time} on ${weeklyTime.day} ${new Date(data.weekly.resetsAt).getDate()}`);
 }
 
@@ -113,11 +115,15 @@ function printJson(data) {
   console.log(JSON.stringify({
     fetchedAt: data.fetchedAt,
     ageSeconds: getAgeSeconds(data),
-    session: { quota: data.session.quota, resetsAt: data.session.resetsAt },
+    session: {
+      quota: data.session.quota,
+      resetsAt: data.session.resetsAt,
+      idealPercent: computeIdealPercent(data.session.resetsAt, FIVE_HOURS),
+    },
     weekly: {
       quota: data.weekly.quota,
       resetsAt: data.weekly.resetsAt,
-      idealPercent: computeIdealPercent(data.weekly.resetsAt),
+      idealPercent: computeIdealPercent(data.weekly.resetsAt, SEVEN_DAYS),
     },
   }));
 }

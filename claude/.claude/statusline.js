@@ -5,7 +5,6 @@ const { execSync } = require('node:child_process');
 
 const CLAUDE_DUMB_ZONE = 59;
 const QUOTA_CACHE_FILE = '/tmp/claude-quota-cache.json';
-const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
 function getGitBranch() {
   try {
@@ -38,7 +37,7 @@ function parseRateLimits(rateLimits) {
   };
 }
 
-// Persisted for claude-quota.js, which only reads this file.
+// Persisted for claude-quota.js and the claude-quota-gnome extension, which only read this file.
 function writeQuotaCache(quota) {
   try {
     fs.writeFileSync(QUOTA_CACHE_FILE, JSON.stringify({ fetchedAt: new Date().toISOString(), ...quota }, null, 2));
@@ -117,12 +116,14 @@ try {
 
   sections.push({ text: model, bgColor: "rgb(68, 68, 68)" });
 
-  // Combined Claude metrics: C:CTX% S:SESS%/XhXm W:WEEKLY%/wed-HH:MM
-  const contextWindow = input.context_window;
-  let claudeText = '';
-  let claudeBgColor = 'rgb(217, 119, 87)';
-  let claudeColor = 'rgb(0, 0, 0)';
+  // Quotas are not displayed here (the GNOME extension shows them), only cached
+  const quotaData = parseRateLimits(input.rate_limits);
+  if (quotaData) {
+    writeQuotaCache(quotaData);
+  }
 
+  // Context window fill, red past the dumb zone threshold
+  const contextWindow = input.context_window;
   if (contextWindow?.current_usage && contextWindow?.context_window_size) {
     const usage = contextWindow.current_usage;
     const currentTokens = (usage.input_tokens || 0) +
@@ -132,32 +133,12 @@ try {
     const contextSize = contextWindow.context_window_size;
     const ctxPercent = Math.round((currentTokens / contextSize) * 100);
 
-    claudeText = `󰆪 ${ctxPercent}%`;
-
-    // Set color based on context window usage
     const isDumbZone = ctxPercent > CLAUDE_DUMB_ZONE;
-    claudeBgColor = isDumbZone ? 'rgb(226, 0, 0)' : 'rgb(217, 119, 87)';
-    claudeColor = isDumbZone ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 0)';
-
-    // Add quota info if the payload provides it
-    const quotaData = parseRateLimits(input.rate_limits);
-    if (quotaData) {
-      writeQuotaCache(quotaData);
-
-      const sessPercent = quotaData.session.quota;
-      const sessResetDate = new Date(quotaData.session.resetsAt);
-      const sessTime = sessResetDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-      claudeText += ` 󰥔 ${sessPercent}% ${sessTime}`;
-
-      const weekPercent = quotaData.weekly.quota;
-      const resetDate = new Date(quotaData.weekly.resetsAt);
-      const idealPercent = Math.round(((SEVEN_DAYS_MS - Math.max(0, resetDate.getTime() - Date.now())) / SEVEN_DAYS_MS) * 100);
-      const dayName = resetDate.toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 2);
-      const time = resetDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-      claudeText += ` 󱨲 ${weekPercent}%/${idealPercent}% ${dayName} ${time}`;
-    }
-
-    sections.push({ text: claudeText, bgColor: claudeBgColor, color: claudeColor });
+    sections.push({
+      text: `󰆪 ${ctxPercent}%`,
+      bgColor: isDumbZone ? 'rgb(226, 0, 0)' : 'rgb(217, 119, 87)',
+      color: isDumbZone ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 0)',
+    });
   }
 
   console.log(formatSections(sections));
