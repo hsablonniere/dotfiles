@@ -97,8 +97,9 @@ detect_files = ['package.json', '.mise.toml', '.tool-versions']
 [custom.onepassword]
 format = "$symbol"
 command = "echo ''"
-when = "op whoami 2>/dev/null"
-ignore_timeout = true
+# flag file refreshed in the background by fish (conf.d/30_prompt_starship.fish)
+when = 'test -e "$XDG_RUNTIME_DIR/op-signed-in"'
+shell = ["sh"]
 symbol = "\uf4fc "
 
 [fill]
