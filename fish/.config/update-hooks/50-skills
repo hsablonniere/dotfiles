@@ -1,2 +1,3 @@
 #!/usr/bin/env fish
-skills update -g -y
+# No -y: it would skip the prompt to remove skills deleted upstream
+skills update -g
