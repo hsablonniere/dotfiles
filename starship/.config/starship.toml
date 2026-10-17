@@ -16,21 +16,13 @@ palette = 'custom'
 format = """
 [\ue0b6](dir)\
 [ $directory ](bg:dir)\
-[\ue0b0](bg:git dir)\
-[ ($git_branch $git_commit( $git_status) )](bg:git)\
-[\ue0b0](bg:node git)\
-[ (${custom.nodejs} )](bg:node)\
-[\ue0b0](node)\
-[ $fill ]()\
-[\ue0b2](status)\
-[ ($status )](bg:status)\
-[\ue0b2](bg:status duration)\
-[ ($cmd_duration )](bg:duration)\
-[\ue0b2](bg:duration sudo)\
-[ $sudo](bg:sudo bold #000000)\
-[\ue0b2](bg:sudo op)\
-[ ${custom.onepassword}](bg:op #ffffff)\
-[\ue0b4](op)\
+\ue0b0\
+([ $git_branch $git_commit( $git_status) ](bg:git)\ue0b0)\
+([ ${custom.nodejs} ](bg:node)\ue0b0)\
+([ ${custom.onepassword}](bg:op #ffffff)\ue0b0)\
+([ $sudo](bg:sudo bold #000000)\ue0b0)\
+([ $cmd_duration ](bg:duration)\ue0b0)\
+([ $status ](bg:status)\ue0b0)\
 $line_break\
 $character\
 """
@@ -116,9 +108,31 @@ format = "$duration"
 
 [status]
 disabled = false
-format = "$symbol $signal_name"
-symbol = "\uf467"
+format = "$symbol( $signal_name)"
+symbol = "\U000f1398"
 
 [character]
 format = '➜ '
 
+
+# Line shown in the herdr pane status bar (patched herdr, ui.pane_status_bar)
+[profiles]
+statusbar = """
+[\ue0b6](dir)\
+[ $directory ](bg:dir)\
+[\ue0b0](bg:git dir)\
+[ ($git_branch $git_commit( $git_status) )](bg:git)\
+[\ue0b0](bg:node git)\
+[ (${custom.nodejs} )](bg:node)\
+[\ue0b0](node)\
+[ $fill ]()\
+[\ue0b2](status)\
+[ ($status )](bg:status)\
+[\ue0b2](bg:status duration)\
+[ ($cmd_duration )](bg:duration)\
+[\ue0b2](bg:duration sudo)\
+[ $sudo](bg:sudo bold #000000)\
+[\ue0b2](bg:sudo op)\
+[ ${custom.onepassword}](bg:op #ffffff)\
+[\ue0b4](op)\
+"""
