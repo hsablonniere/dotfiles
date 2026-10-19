@@ -9,6 +9,7 @@ prepend_preloaders = [
   { mime = "application/postscript", run = "mediainfo" },
 ]
 prepend_previewers = [
+  { url = "*.md", run = 'piper -- backtuick -c -w "$w" "$1"' },
   { mime = "{audio,video,image}/*", run = "mediainfo" },
   { mime = "application/subrip", run = "mediainfo" },
   { mime = "application/postscript", run = "mediainfo" },
