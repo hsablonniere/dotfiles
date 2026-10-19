@@ -5,6 +5,9 @@ status_indicators = "symbols"
 prompt_new_tab_name = false
 sidebar_collapsed_mode = "hidden"
 
+[ui.sidebar.spaces]
+rows = [["state_icon", "workspace"]]
+
 [ui.sound]
 enabled = false
 
