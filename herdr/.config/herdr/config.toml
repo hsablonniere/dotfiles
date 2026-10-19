@@ -8,6 +8,9 @@ sidebar_collapsed_mode = "hidden"
 [ui.sidebar.spaces]
 rows = [["state_icon", "workspace"]]
 
+[ui.sidebar.agents]
+rows = [["state_icon", "workspace", "tab"], ["terminal_title_stripped"]]
+
 [ui.sound]
 enabled = false
 
