@@ -40,6 +40,8 @@ keybind = alt+left=unbind
 keybind = alt+right=unbind
 keybind = alt+up=unbind
 keybind = alt+down=unbind
+keybind = ctrl+shift+arrow_left=unbind
+keybind = ctrl+shift+arrow_right=unbind
 keybind = ctrl+w=unbind
 # ctrl+shift+page_up/down: herdr rejects Page keys, so send alt+shift+h/l (ESC H / ESC L) instead
 keybind = ctrl+shift+page_up=text:\x1bH
