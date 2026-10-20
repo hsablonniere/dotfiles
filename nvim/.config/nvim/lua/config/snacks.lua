@@ -9,7 +9,12 @@
 vim.pack.add({ { src = 'https://github.com/folke/snacks.nvim', version = vim.version.range('2.*') } })
 require('snacks').setup({
   bigfile = { enabled = true },
-  indent = { enabled = true },
+  indent = {
+    enabled = true,
+    -- Thin guides (left one-eighth block instead of the box-drawing line), colors in colorscheme.lua
+    indent = { char = '▏' },
+    scope = { char = '▏' },
+  },
   input = { enabled = true },
   notifier = { enabled = true },
   picker = {
