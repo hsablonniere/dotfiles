@@ -4,6 +4,9 @@ onboarding = false
 status_indicators = "symbols"
 prompt_new_tab_name = false
 sidebar_collapsed_mode = "hidden"
+pane_outer_borders = false
+pane_gaps = false
+hide_tab_bar_when_single_tab = true
 
 [ui.sidebar.spaces]
 rows = [["state_icon", "workspace"]]
