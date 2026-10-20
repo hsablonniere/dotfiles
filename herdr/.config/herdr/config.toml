@@ -42,6 +42,7 @@ previous_workspace = "alt+shift+k"
 switch_workspace = "ctrl+1..9"
 zoom = "alt+z"
 toggle_sidebar = "alt+s"
+goto = "alt+g"
 
 [experimental]
 kitty_graphics = true
