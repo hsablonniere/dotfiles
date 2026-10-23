@@ -30,7 +30,7 @@ export const register: Register = on => {
     })
 
     return (
-      <Box flexDirection="row" marginBottom={1}>
+      <Box flexDirection="row" marginY={1}>
         <Box width={2} flexShrink={0}>
           <Text dimColor>$</Text>
         </Box>
