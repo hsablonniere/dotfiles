@@ -3,19 +3,22 @@ import type { Register } from 'claude-code'
 const BULLET = '●'
 const LEFT_CAP = ''
 const RIGHT_CAP = ''
-const PILL = 'suggestion'
+const PILL_COLORS: Record<string, string> = { Q: '#5fd7d7', N: '#d7d75f', H: '#af87ff' }
+const LABEL_COLORS = { option: '#ff875f', step: '#87d7af', sub: '#d7af87' }
 const PILL_TEXT = '#000000'
-const QUESTION = /^(Q\d+)\.\s+(.*)$/
+const MARKED = /^(\s*(?:[-*]\s+)?)(?:_([QNH]\d+)_|-([QNH]\d+)-)(?=\s)/
+const ITEM = /^(\s*)((?:[-*]\s+)?)([QNH]\d+|[A-C]|\d+[a-z]|\d+)(\.?)\s+(.*)$/
 const TABLE_SEPARATOR = /^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?\s*$/
 const HEADER_BG = '#3b4048'
 const ROW_BG = ['#12171d', '#161b22']
-const GUTTER = 2
-const MARGIN = 1
+const GUTTER = 3
+const IS_TABLE_STYLING_ENABLED = true
+const MARGIN = 2
 const MAX_CELL_LINES = 4
 
 type Chunk =
   | { kind: 'text'; text: string; hasGap: boolean }
-  | { kind: 'question'; label: string; rest: string; hasGap: boolean }
+  | { kind: 'item'; indent: number; bullet: string; label: string; rest: string; hasGap: boolean }
   | { kind: 'table'; header: string[]; rows: string[][]; hasGap: boolean }
 
 const isTableRow = (line: string) => line.trim().startsWith('|')
@@ -100,13 +103,13 @@ function split(text: string): Chunk[] {
   const lines = text.split('\n')
 
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i] ?? ''
+    const line = (lines[i] ?? '').replace(MARKED, (_, lead: string, a?: string, b?: string) => `${lead}${a ?? b}.`)
 
     if (line.trimStart().startsWith('```')) {
       isFenced = !isFenced
     }
 
-    const isTable = !isFenced && isTableRow(line) && TABLE_SEPARATOR.test(lines[i + 1] ?? '')
+    const isTable = IS_TABLE_STYLING_ENABLED && !isFenced && isTableRow(line) && TABLE_SEPARATOR.test(lines[i + 1] ?? '')
     if (isTable) {
       flush()
       const header = splitRow(line).map(cleanCell)
@@ -126,10 +129,20 @@ function split(text: string): Chunk[] {
       continue
     }
 
-    const match = isFenced ? null : QUESTION.exec(line)
-    if (match) {
+    const match = isFenced ? null : ITEM.exec(line)
+    const token = match?.[3] ?? ''
+    const hasDot = (match?.[4] ?? '') === '.'
+    const isValid = match !== null && (hasDot || /^\d+[a-z]$/.test(token))
+    if (match && isValid) {
       flush()
-      chunks.push({ kind: 'question', label: match[1] ?? '', rest: match[2] ?? '', hasGap })
+      chunks.push({
+        kind: 'item',
+        indent: (match[1] ?? '').length,
+        bullet: match[2] ?? '',
+        label: token + (match[4] ?? ''),
+        rest: match[5] ?? '',
+        hasGap,
+      })
       hasGap = false
     } else {
       buffer.push(line)
@@ -233,6 +246,38 @@ export const register: Register = on => {
       )
     }
 
+    const drawItem = (chunk: Extract<Chunk, { kind: 'item' }>) => {
+      const pillColor = PILL_COLORS[chunk.label[0] ?? '']
+      const isPill = pillColor !== undefined && /^[QNH]\d/.test(chunk.label)
+      const labelColor = /^[A-C]/.test(chunk.label)
+        ? LABEL_COLORS.option
+        : /^\d+[a-z]/.test(chunk.label)
+          ? LABEL_COLORS.sub
+          : LABEL_COLORS.step
+
+      return (
+        <Box flexDirection="row" marginTop={chunk.hasGap ? 1 : 0} marginLeft={chunk.indent}>
+          {chunk.bullet === '' ? null : <Text>{chunk.bullet}</Text>}
+          {isPill ? (
+            <Box flexDirection="row">
+              <Text color={pillColor}>{LEFT_CAP}</Text>
+              <Text color={PILL_TEXT} backgroundColor={pillColor} bold>
+                {chunk.label.replace(/\.$/, '')}
+              </Text>
+              <Text color={pillColor}>{RIGHT_CAP}</Text>
+            </Box>
+          ) : (
+            <Text color={labelColor} bold>
+              {chunk.label}
+            </Text>
+          )}
+          <Box marginLeft={1} flexGrow={1} flexShrink={1}>
+            <Markdown text={chunk.rest} />
+          </Box>
+        </Box>
+      )
+    }
+
     return (
       <Box flexDirection="row" marginTop={e.props.isFirstOfReply ? 0 : 1}>
         <Box width={2} flexShrink={0}>
@@ -247,16 +292,7 @@ export const register: Register = on => {
                 <Markdown text={chunk.text} />
               </Box>
             ) : (
-              <Box flexDirection="row" marginTop={chunk.hasGap ? 1 : 0}>
-                <Text color={PILL}>{LEFT_CAP}</Text>
-                <Text color={PILL_TEXT} backgroundColor={PILL} bold>
-                  {chunk.label}
-                </Text>
-                <Text color={PILL}>{RIGHT_CAP}</Text>
-                <Box marginLeft={1} flexGrow={1} flexShrink={1}>
-                  <Markdown text={chunk.rest} />
-                </Box>
-              </Box>
+              drawItem(chunk)
             ),
           )}
         </Box>

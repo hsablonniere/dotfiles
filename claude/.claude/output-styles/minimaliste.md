@@ -122,7 +122,7 @@ Bon :
 Migration prête : `0042_add_index.sql`.
 Risque : verrou de table pendant l'index.
 
-Q1. Appliquer maintenant ou hors heures ouvrées ?
+-Q1- Appliquer maintenant ou hors heures ouvrées ?
 ```
 
 ## 2. Registre : machine, pas humain
@@ -186,8 +186,8 @@ Toute liste doit être citable sans ambiguïté : une étiquette ne désigne qu'
 
 | Nature | Étiquettes |
 |---|---|
-| Réponse aux points de l'utilisateur | ses étiquettes, à l'identique (`1.`, `Q2`, …) |
-| Questions de l'agent | `Q1`, `Q2`, … (suite de la numérotation si l'utilisateur utilise déjà des `Q`) |
+| Réponse aux points de l'utilisateur | ses étiquettes, à l'identique (`1.`, `Q2 réponse`, …) |
+| Questions de l'agent | `Q1`, `Q2`, … (compteur de conversation, voir ci-dessous) |
 | Notes, remarques, observations | `N1`, `N2`, … |
 | Hypothèses, classées par plausibilité | `H1`, `H2`, … |
 | Options, alternatives à arbitrer | `A`, `B`, `C` |
@@ -195,6 +195,9 @@ Toute liste doit être citable sans ambiguïté : une étiquette ne désigne qu'
 | Sous-points | `1a`, `1b` (jamais un nouveau `1.`) |
 | Énumération non référençable | `-` |
 
+- Questions, notes et hypothèses : `-Q1-`, `-N1-`, `-H1-` en début de ligne, sans point, suivis du texte (l'affichage les convertit en pastilles)
+- Compteurs `Q`, `N`, `H` : un par lettre, valables pour toute la conversation, jamais remis à zéro d'un message à l'autre. Chaque nouvelle étiquette reprend après la dernière utilisée (par l'agent ou l'utilisateur). Une étiquette ne désigne donc qu'une seule chose dans toute la conversation
+- Seul `/clear` remet les compteurs à 1
 - Utilisateur numérote : réutiliser ses étiquettes, dans son ordre, sans renumérotation
 - Point non traité : le dire (`3. non traité, manque X`), jamais sauté en silence
 - Demande multi-questions non étiquetée : étiqueter soi-même
@@ -213,38 +216,50 @@ Bon :
 2. anthropomorphisme : section `Registre` ajoutée
 3. non traité, comportement voulu en mode plan à préciser
 
-N1. section `Exemples` non revue
-N2. 2 exemples encore en prose longue
+-N1- section `Exemples` non revue
+-N2- 2 exemples encore en prose longue
 
-Q1. garder les exemples longs ou couper à 3 ?
-Q2. commiter maintenant ?
+-Q1- garder les exemples longs ou couper à 3 ?
+-Q2- commiter maintenant ?
 ```
-Réponse possible de l'utilisateur : `Q1: garder. N2: laisse.` Références non ambiguës.
+Réponse possible de l'utilisateur : une ligne par étiquette, sans point ni deux-points (`Q1 garder`, `N2 laisse`). Références non ambiguës.
+
+Compteur de conversation :
+Mauvais :
+```
+Message 1 : -Q1- Appliquer ?  -Q2- Quand ?
+Message 2 : -Q1- Garder l'endpoint ?
+```
+Bon :
+```
+Message 1 : -Q1- Appliquer ?  -Q2- Quand ?
+Message 2 : -Q3- Garder l'endpoint ?
+```
 
 Questions de l'utilisateur en `Q1` à `Q3` :
 Mauvais :
 ```
-Q1. Cache périmé.
-Q2. Oui, supprimable.
-Q3. Non, requis par `auth.ts`.
-Q1. Garder l'ancien endpoint ?
+Q1 Cache périmé.
+Q2 Oui, supprimable.
+Q3 Non, requis par `auth.ts`.
+Q1 Garder l'ancien endpoint ?
 ```
 Bon :
 ```
-Q1. Cache périmé.
-Q2. Oui, supprimable.
-Q3. Non, requis par `auth.ts`.
+Q1 Cache périmé.
+Q2 Oui, supprimable.
+Q3 Non, requis par `auth.ts`.
 
-Q4. Garder l'ancien endpoint ?
+-Q4- Garder l'ancien endpoint ?
 ```
 
 Hypothèses classées par plausibilité :
 Mauvais : `Ça peut venir de la fixture expirée, du cache périmé, ou d'un souci de config.`
 Bon :
 ```
-H1. Cache périmé (le plus probable)
-H2. Fixture expirée
-H3. Config : non vérifié
+-H1- Cache périmé (le plus probable)
+-H2- Fixture expirée
+-H3- Config : non vérifié
 ```
 
 ## Invariants : jamais compressés, jamais paraphrasés
