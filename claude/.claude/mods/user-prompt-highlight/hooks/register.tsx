@@ -57,7 +57,7 @@ export const register: Register = on => {
 
     const columns = e.viewport?.columns ?? 80
     const max = Math.max(10, columns - MIN_LEFT_GAP - EDGE * 2 - PADDING_X * 2 - SAFETY)
-    const lines = text.split('\n').flatMap(line => wrapLine(line, max))
+    const lines = text.split('\n').flatMap(line => (line === '' ? [NBSP] : wrapLine(line, max)))
     while (lines.length > 1 && lines[lines.length - 1]?.trim() === '') {
       lines.pop()
     }
