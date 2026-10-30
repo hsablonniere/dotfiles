@@ -5,6 +5,9 @@ const { execSync } = require('node:child_process');
 
 const CLAUDE_DUMB_ZONE = 59;
 const QUOTA_CACHE_FILE = '/tmp/claude-quota-cache.json';
+// Prompt cache: warn this many seconds before it goes cold, and show a miss this long after it happened
+const CACHE_WARN_SECONDS = 10 * 60;
+const CACHE_MISS_SHOWN_SECONDS = 5 * 60;
 
 function getGitBranch() {
   try {
@@ -61,6 +64,37 @@ function formatModelName(displayName) {
   }
 
   return result;
+}
+
+function formatTokens(tokens) {
+  return tokens >= 1000 ? `${Math.round(tokens / 1000)}k` : String(tokens);
+}
+
+/**
+ * The prompt cache segment, shown only when it matters: a recent miss and its cause, the cache gone cold (with what
+ * the next request re-sends), or the minutes left before it does. Null otherwise.
+ */
+function promptCacheSection(cache) {
+  if (!cache?.caching_observed) return null;
+  const now = Date.now() / 1000;
+
+  if (cache.last_miss_at && now - cache.last_miss_at < CACHE_MISS_SHOWN_SECONDS) {
+    const cause = cache.last_miss_cause?.causes?.join(', ') || 'unknown';
+    return { text: `cache miss: ${cause}`, bgColor: 'rgb(198, 120, 221)', color: 'rgb(0, 0, 0)' };
+  }
+
+  const isCold = !cache.warm || (cache.expires_at && cache.expires_at <= now);
+  if (isCold) {
+    const resend = cache.recache_tokens_if_cold ? ` ${formatTokens(cache.recache_tokens_if_cold)}` : '';
+    return { text: `cache cold${resend}`, bgColor: 'rgb(226, 0, 0)' };
+  }
+
+  const left = cache.expires_at - now;
+  if (left <= CACHE_WARN_SECONDS) {
+    return { text: `cache ${Math.max(1, Math.ceil(left / 60))}m`, bgColor: 'rgb(229, 192, 123)', color: 'rgb(0, 0, 0)' };
+  }
+
+  return null;
 }
 
 function formatSections(sections) {
@@ -139,6 +173,11 @@ try {
       bgColor: isDumbZone ? 'rgb(226, 0, 0)' : 'rgb(217, 119, 87)',
       color: isDumbZone ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 0)',
     });
+  }
+
+  const cacheSection = promptCacheSection(input.prompt_cache);
+  if (cacheSection) {
+    sections.push(cacheSection);
   }
 
   console.log(formatSections(sections));
