@@ -41,8 +41,9 @@ function split(text: string): Chunk[] {
 
     const block = isFenced ? null : (parseCode(lines, i, hasGap) ?? parseTable(lines, i, hasGap))
     if (block) {
+      // flush() is what spots the blank line ending the buffer, so the gap is only known after it
       flush()
-      chunks.push(block.chunk)
+      chunks.push({ ...block.chunk, hasGap })
       hasGap = false
       i = block.end
       continue
@@ -56,7 +57,7 @@ function split(text: string): Chunk[] {
     const item = isFenced ? null : parseItem(line, hasGap)
     if (item) {
       flush()
-      chunks.push(item)
+      chunks.push({ ...item, hasGap })
       hasGap = false
     } else {
       buffer.push(line)
