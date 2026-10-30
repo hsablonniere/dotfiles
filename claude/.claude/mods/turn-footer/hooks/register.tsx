@@ -6,6 +6,12 @@ type Turn = { tools: number; isActive: boolean; completedAt: number; updatedAt: 
 const STALE_MS = 60 * 60 * 1000
 const GRACE_MS = 5000
 const MAX_INFOS = 100
+const ANSWER_TOLERANCE_MS = 1000
+const PILL_BG = '#3b4048'
+const PILL_FG = '#c0c4cc'
+const TERMINAL_BG = '#000000'
+const LEFT_CAP = '\ue0b6'
+const RIGHT_CAP = '\ue0b4'
 
 const formatDuration = (ms: number) => {
   const total = Math.round(ms / 1000)
@@ -45,6 +51,17 @@ async function writeTurn($: Store, patch: Partial<Turn>) {
   await $.store.set('turn', { ...turn, ...patch, updatedAt: await $.clock.now() })
 }
 
+// turn.complete and the footer may round the duration differently
+async function findAnswer($: Store, durationMs: number): Promise<string | undefined> {
+  const answers = ((await $.store.get('answers')) as Record<string, string> | undefined) ?? {}
+  const closest = Object.keys(answers)
+    .map(Number)
+    .filter(ms => Math.abs(ms - durationMs) <= ANSWER_TOLERANCE_MS)
+    .sort((a, b) => Math.abs(a - durationMs) - Math.abs(b - durationMs))[0]
+
+  return closest === undefined ? undefined : answers[String(closest)]
+}
+
 export const register: Register = on => {
   const cache = new Map<number, Info>()
 
@@ -62,7 +79,19 @@ export const register: Register = on => {
   })
 
   on('turn.complete', async ($, e, next) => {
+    if (e.agentId !== undefined) {
+      return next(e)
+    }
     await writeTurn($, { isActive: false, completedAt: await $.clock.now() })
+    if (e.answer !== '') {
+      const answers = ((await $.store.get('answers')) as Record<string, string> | undefined) ?? {}
+      const kept = Object.entries({ ...answers, [String(e.durationMs)]: e.answer }).slice(-MAX_INFOS)
+      try {
+        await $.store.set('answers', Object.fromEntries(kept))
+      } catch {
+        // copy is best effort
+      }
+    }
 
     return next(e)
   })
@@ -72,7 +101,7 @@ export const register: Register = on => {
       return next(e)
     }
 
-    const { Box, Text } = $.ui.resolve(e)
+    const { Box, Text, Button } = $.ui.resolve(e)
     const key = e.props.durationMs
     const infos = ((await $.store.get('infos')) as Record<string, Info> | undefined) ?? {}
     let info = infos[String(key)] ?? cache.get(key)
@@ -102,12 +131,45 @@ export const register: Register = on => {
       }
     }
 
+    const scope = `copy:${key}`
+
     return (
       <Box flexDirection="row" marginTop={1}>
         <Box width={2} flexShrink={0}>
           <Text dimColor></Text>
         </Box>
         <Text dimColor>{parts.join(' · ')}</Text>
+        {info ? (
+          <Box flexDirection="row">
+            <Text dimColor>{' · '}</Text>
+            <Button
+              plain
+              key={scope}
+              label="copy"
+              hover={{ scope }}
+              onPress={async press => {
+                const answer = await findAnswer($, key)
+                if (answer === undefined) {
+                  await $.ui.toast('No reply to copy')
+                  return
+                }
+                const result = await $.ui.copy({ text: answer, surface: press.surface })
+                await $.ui.toast(result.isCopied ? 'Reply copied' : `Copy failed: ${result.reason}`)
+              }}
+            >
+              {/* the terminal inverts a hovered button, so the caps' hover colors are pre-inverted */}
+              <Text color={PILL_BG} hover={{ scope, color: TERMINAL_BG, backgroundColor: PILL_FG }}>
+                {LEFT_CAP}
+              </Text>
+              <Text color={PILL_FG} backgroundColor={PILL_BG}>
+                copy
+              </Text>
+              <Text color={PILL_BG} hover={{ scope, color: TERMINAL_BG, backgroundColor: PILL_FG }}>
+                {RIGHT_CAP}
+              </Text>
+            </Button>
+          </Box>
+        ) : null}
       </Box>
     )
   })

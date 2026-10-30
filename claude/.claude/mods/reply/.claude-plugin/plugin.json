@@ -1,0 +1,1 @@
+{ "name": "reply", "version": "0.1.0", "description": "Draws Claude's replies: list labels as pills, tables as shaded grids, code blocks with a language tab, and copy buttons" }
