@@ -16,19 +16,26 @@
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
     "plugin-dev@claude-plugins-official": false,
-    "typescript-lsp@claude-plugins-official": false
+    "typescript-lsp@claude-plugins-official": true
   },
+  "env": {
+    "CLAUDE_CODE_PLUGIN_DIRS": "~/.claude/mods/prompt-bubble:~/.claude/mods/reply:~/.claude/mods/turn-footer:~/.claude/mods/spinner-labels",
+    "DISABLE_AUTOUPDATER": "1"
+  },
+  "extraKnownMarketplaces": {},
   "feedbackSurveyRate": 0,
+  "fileCheckpointingEnabled": true,
   "hooks": {
-    "PreToolUse": [
+    "SessionStart": [
       {
         "hooks": [
           {
-            "command": "rtk hook claude",
+            "command": "bash '/home/h/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10,
             "type": "command"
           }
         ],
-        "matcher": "Bash"
+        "matcher": "^(startup|resume|clear|compact|fork)$"
       }
     ],
     "Stop": [
@@ -73,6 +80,7 @@
       "Bash(stat:*)",
       "Bash(tail:*)",
       "Bash(wc:*)",
+      "Bash(artuistic:*)",
       "Bash(which:*)",
       "Bash(git add:*)",
       "Bash(git branch:*)",
@@ -137,8 +145,11 @@
   "statusLine": {
     "command": "~/.claude/statusline.js",
     "padding": 0,
+    "refreshInterval": 60,
     "type": "command"
   },
+  "switchModelsOnFlag": true,
+  "timeFormat": "auto",
   "tui": "fullscreen",
   "voice": {
     "enabled": true,
