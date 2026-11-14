@@ -82,7 +82,7 @@ Herdr is a desktop app for terminals and coding agents (spaces, tabs and splits)
 
 > **Note:** `~/.config/herdr-app/` also holds files Herdr writes itself (shipped layouts and mods, `AGENTS.md`, type definitions, icons) and private state (open spaces and tabs, mod storage), so stow links only my own files:
 
-- `settings.json`: theme, font, zoom, sounds
+- `settings.json`: theme, font, zoom, sounds off, telemetry off
 - `keys.json`: shortcuts, with the AZERTY digit row bound by keysym name (`alt-eacute`, `ctrl-agrave`)
 - `themes/hsablonniere-dark.json`: my terminal colors, ported from Ghostty
 - `layouts/tmux.json`: clone of the shipped `main` layout with bare panes and 1px split lines
