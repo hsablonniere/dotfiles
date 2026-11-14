@@ -1,0 +1,10 @@
+{
+  "background": "#000000",
+  "foreground": "#ffffff",
+  "selection": "#444444",
+  "cursor": "#ffffff",
+  "ansi": [
+    "#000000", "#ff4040", "#90af7d", "#ffff66", "#9999ff", "#ff4bb9", "#3aeee0", "#ffffff",
+    "#bbbbbb", "#ff4040", "#90af7d", "#ffff66", "#9999ff", "#ff4bb9", "#3aeee0", "#ffffff"
+  ]
+}

@@ -76,15 +76,18 @@ Git version control system configuration.
 
 ### [Herdr](https://herdr.dev/)
 
-Herdr is a terminal multiplexer for coding agents (tabs, splits and workspaces).
+Herdr is a desktop app for terminals and coding agents (spaces, tabs and splits), backed by `herdr-core` (`hc`), which keeps the terminals running when the window closes.
 
-**Config location:** `.config/herdr/config.toml`
+**Config location:** `.config/herdr-app/`
 
-> **Note:** `~/.config/herdr/` also holds runtime files (sockets, logs, `session.json`), so stow links only `config.toml`.
+> **Note:** `~/.config/herdr-app/` also holds files Herdr writes itself (shipped layouts and mods, `AGENTS.md`, type definitions, icons) and private state (open spaces and tabs, mod storage), so stow links only my own files:
 
-Tab, split, pane and workspace shortcuts live in herdr (`[keys]`), not in Ghostty, so Ghostty unbinds the matching defaults.
-Herdr does not accept the Page keys or digit keys on AZERTY, so Ghostty remaps them to chords herdr understands
-(e.g. `alt+physical:one` sends `ESC 1`, `ctrl+page_down` sends `ESC N`). Avoid `ESC P` (DCS introducer).
+- `settings.json`: theme, font, zoom, sounds
+- `keys.json`: shortcuts, with the AZERTY digit row bound by keysym name (`alt-eacute`, `ctrl-agrave`)
+- `themes/hsablonniere-dark.json`: my terminal colors, ported from Ghostty
+- `layouts/tmux.json`: clone of the shipped `main` layout with bare panes and 1px split lines
+- `mods/nav`: moves tabs left/right, jumps to the n-th main space (git worktrees skipped)
+- `mods/my-spaces`, `mods/my-tabs`: clones of the shipped sidebar and tab bar, numbering spaces and tabs, folding worktrees
 
 ### [Neovim](https://neovim.io/)
 

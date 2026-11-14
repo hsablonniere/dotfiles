@@ -1,0 +1,13 @@
+{
+  "appearance": "dark",
+  "font": "JetBrainsMono Nerd Font Mono",
+  "font_ligatures": false,
+  "font_size": 15.0,
+  "minimum_contrast": 1.0,
+  "sounds": {
+    "enabled": false
+  },
+  "telemetry": false,
+  "theme": "hsablonniere-dark",
+  "zoom": 1.2
+}
