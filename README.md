@@ -99,14 +99,6 @@ Written from scratch, with habits carried over from WebStorm. See its
 [README](nvim/.config/nvim/README.md) for the structure and the
 [cheatsheet](nvim/.config/nvim/docs/cheatsheet.md) for the keymaps.
 
-### [npm](https://www.npmjs.com/)
-
-npm is the package manager for JavaScript.
-
-**Config location:** `.npmrc`
-
-- `ignore-scripts=true` - Disables automatic script execution for security
-
 ### [Pi](https://pi.dev/)
 
 Pi, a terminal coding agent.
