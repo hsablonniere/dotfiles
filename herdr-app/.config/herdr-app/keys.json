@@ -65,6 +65,8 @@
     "alt-shift-n": "tab.next",
     "alt-shift-b": "tab.prev",
     "alt-z": "pane.zoom",
+    "alt-f": "nav.panel-files",
+    "alt-c": "nav.panel-changes",
     "alt-shift-z": "nav.focus",
     "alt-s": "layout.toggle:sidebar",
     "alt-g": "mod.open:picker",
