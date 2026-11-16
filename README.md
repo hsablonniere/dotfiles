@@ -25,7 +25,7 @@ Claude Code is Anthropic's official CLI tool for Claude.
 - `settings.json` - CLI settings and preferences
 - `statusline.js` - Custom statusline configuration (caches the `rate_limits` quotas received from Claude Code)
 - `claude-quota.js` - Reads the quota cache written by the statusline and prints it with its age (`--json` available)
-- `hooks/` - Hook scripts (`speak.sh`: text-to-speech, toggled by `~/.local/state/speak-enabled`)
+- `hooks/` - Hook scripts (`speak.sh`: text-to-speech, toggled by `~/.local/state/speak-enabled`; `herdr-pin.sh`: `SessionStart` hook that tells `scripts/herdr-pin.sh` which session to resume)
 - `output-styles/` - Custom output styles (`minimaliste.md`)
 
 > **Note:** `~/.claude/settings.json` is a real file, not a symlink, because it holds private keys (e.g. `autoMode`).
@@ -107,6 +107,7 @@ Pi, a terminal coding agent.
 
 - `settings.json` - Default provider, model and theme
 - `extensions/statusline.ts` - Powerline status bar replacing the footer, inspired by the Claude Code one
+- `extensions/herdr-pin.ts` - Tells `scripts/herdr-pin.sh` which session to resume
 
 ### [Starship](https://starship.rs/)
 
@@ -128,6 +129,17 @@ A blazing fast terminal file manager written in Rust.
 `scripts/` holds helper scripts, not meant to be stowed:
 
 - `claude-settings-export.sh` - Exports a public copy of `~/.claude/settings.json` without its private keys
+- `herdr-pin.sh` - Pins a command to a Herdr terminal so that it comes back after a core restart or a reboot (see below)
+
+### Herdr pin
+
+After a restart, `herdr-core` gives a kept terminal a fresh shell and never reruns its command. `scripts/herdr-pin.sh` fills the gap, only for commands that ask for it:
+
+- `hp <command>` (fish function) runs a command pinned to the terminal. `claude`, `pi` and `opencode` are fish functions that do it automatically; use `command claude` to skip it.
+- The record lives in `~/.local/state/herdr-pin/<HC_TERMINAL_ID>` (folder, command to rerun, original command). It is removed when the command returns, so quitting on purpose never brings it back. A core stop or a reboot kills the script first, so the record stays.
+- Agents replace the command with a resume one once their session exists (`claude --resume <id>`, `pi --session <id>`, `opencode --session <id>`) through a hook or extension. When resuming fails right away (empty session), the original command runs instead.
+- `fish/.config/fish/conf.d/40_herdr_pin.fish` runs `herdr-pin.sh --restore` in the shell recreated by the core.
+- Hooks to declare: `SessionStart` in `~/.claude/settings.json` (`~/.claude/hooks/herdr-pin.sh`), and for opencode the plugin `~/.config/opencode/plugins/herdr-pin.js` (stow does not link it, `~/.config/opencode/` also holds files managed by Herdr: `ln -s` it).
 
 ## Management via Stow
 

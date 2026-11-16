@@ -36,6 +36,16 @@
           }
         ],
         "matcher": "^(startup|resume|clear|compact|fork)$"
+      },
+      {
+        "hooks": [
+          {
+            "command": "~/.claude/hooks/herdr-pin.sh",
+            "timeout": 10,
+            "type": "command"
+          }
+        ],
+        "matcher": "^(startup|resume|clear|compact|fork)$"
       }
     ],
     "Stop": [
