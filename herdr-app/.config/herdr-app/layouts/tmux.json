@@ -100,7 +100,8 @@
           },
           "size": {
             "px": 28
-          }
+          },
+          "hidden": true
         },
         {
           "id": "nav",
@@ -194,5 +195,9 @@
   "traffic_lights": [
     12,
     16
-  ]
+  ],
+  "colors": {
+    "border": "#333333"
+  },
+  "font_weight": 400
 }

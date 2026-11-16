@@ -9,7 +9,7 @@ import { View, div } from "gpui-kit";
 import { spaces, panes, run, nextCommand, layout } from "herdr";
 
 const WORKTREES = "/.herdr/worktrees/";
-const CHROME = ["sidebar", "tabs", "status"];
+const CHROME = ["sidebar", "tabs"];
 
 export default class Nav extends View {
   init(_props, cx) {
