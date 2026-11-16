@@ -34,15 +34,23 @@
                   "background": "background",
                   "border": {
                     "width": 1,
-                    "color": "background"
+                    "color": "border"
                   },
                   "focus": {
                     "width": 1,
                     "color": "accent"
                   },
                   "radius": 0,
-                  "gap": 1,
-                  "lone": false
+                  "gap": 0,
+                  "lone": true,
+                  "header": {
+                    "content": {
+                      "mod": "my-pane-status"
+                    },
+                    "height": 27,
+                    "position": "bottom",
+                    "reveal": "always"
+                  }
                 }
               },
               "background": "border"
