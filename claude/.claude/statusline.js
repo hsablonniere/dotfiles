@@ -97,6 +97,41 @@ function promptCacheSection(cache) {
   return null;
 }
 
+function toHex(rgb) {
+  return `#${rgb.match(/\d+/g).map((n) => Number(n).toString(16).padStart(2, '0')).join('')}`;
+}
+
+/**
+ * Shares the model, context and cache sections with the Herdr pane status bar (mod my-pane-status),
+ * which draws them itself under the agent pane. Keyed by the Herdr terminal id, best effort.
+ */
+function writeHerdrState(sections, cwd) {
+  const terminal = process.env.HC_TERMINAL_ID;
+  const runtime = process.env.XDG_RUNTIME_DIR;
+  if (!terminal || !runtime) return;
+  try {
+    const dir = `${runtime}/herdr-status`;
+    fs.mkdirSync(dir, { recursive: true });
+    const tmp = `${dir}/.${terminal}.agent.${process.pid}`;
+    const payload = sections.map(({ text, bgColor, color }) => ({
+      text,
+      bg: toHex(bgColor),
+      fg: color ? toHex(color) : '#ffffff',
+    }));
+    // Same directory and git detail as the shell prompt (see scripts/herdr-status.sh)
+    let dirInfo = {};
+    try {
+      dirInfo = JSON.parse(execSync(`"$HOME/dotfiles/scripts/herdr-status.sh" --info "${cwd}"`, { encoding: 'utf-8' }));
+    } catch {
+      // Falls back to the pane folder in the mod
+    }
+    fs.writeFileSync(tmp, JSON.stringify({ ...dirInfo, sections: payload }));
+    fs.renameSync(tmp, `${dir}/${terminal}.agent.json`);
+  } catch {
+    // Best effort
+  }
+}
+
 function formatSections(sections) {
 
   const LEFT_ROUND = '\ue0b6';
@@ -139,6 +174,7 @@ try {
     sections.push({ text: branch, bgColor: "rgb(70, 107, 62)" });
   }
   
+  const herdrFrom = sections.length;
   let model = formatModelName(input.model.display_name);
 
   // Add effort level if available
@@ -180,7 +216,11 @@ try {
     sections.push(cacheSection);
   }
 
-  console.log(formatSections(sections));
+  writeHerdrState(sections.slice(herdrFrom), cwd);
+  // Inside Herdr the pane status bar (mod my-pane-status) shows these sections: print nothing
+  if (!process.env.HC_TERMINAL_ID) {
+    console.log(formatSections(sections));
+  }
 } catch (error) {
   console.error('Error:', error.message);
   process.exit(1);
