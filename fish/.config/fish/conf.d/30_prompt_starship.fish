@@ -2,6 +2,11 @@ if status is-interactive
     # Suppress fish greeting
     set -g fish_greeting
 
+    # Inside Herdr the pane status bar shows the prompt info, so starship only draws the arrow
+    if test -n "$HC_TERMINAL_ID"
+        set -gx STARSHIP_CONFIG ~/dotfiles/starship/.config/starship-herdr.toml
+    end
+
     # Powerline separators: starship cannot know which optional segment comes next, so the
     # format only emits a bare \ue0b0 after each segment and this wrapper colours it with the
     # background of the segment before (fg) and after (bg). The last one becomes a rounded \ue0b4

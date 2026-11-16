@@ -1,0 +1,11 @@
+# Minimal prompt used inside Herdr: the pane status bar (mod my-pane-status) shows the
+# directory, git, node, status, duration, sudo and 1Password info instead.
+# Selected by fish/.config/fish/conf.d/30_prompt_starship.fish when HC_TERMINAL_ID is set.
+
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = false
+format = "$character"
+
+[character]
+format = '➜ '
